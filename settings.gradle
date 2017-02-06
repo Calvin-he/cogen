@@ -1,0 +1,1 @@
+include 'server_api', 'wechat_cli', 'miniprogram_cli'
