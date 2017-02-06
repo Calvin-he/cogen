@@ -10,12 +10,8 @@
 ## 需求说明演示
 
 1. 列表页面截图：
-    A            | B
-    ------------ | -------------
-    ![Image of Lesson List](./images/pict-1.PNG) | ![Image of Lesson List](./images/pict-2.PNG)
+ > ![Image of Lesson List](./images/pict-1.PNG)  ![Image of Lesson List](./images/pict-2.PNG)
 
 2. 课程页面截图
-    A            | B             | C
-    ------------ | ------------- | -------------
-    ![Image of Lesson List](./images/pict-3.PNG) | ![Image of Lesson List](./images/pict-4.PNG) | ![Image of Lesson List](./images/pict-5.PNG)
+> ![Image of Lesson List](./images/pict-3.PNG)  ![Image of Lesson List](./images/pict-4.PNG)  ![Image of Lesson List](./images/pict-5.PNG)
 
