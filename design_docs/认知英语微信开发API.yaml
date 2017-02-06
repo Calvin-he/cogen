@@ -88,12 +88,12 @@ paths:
 
   /lessons/{id}/comments:
     get:
-      description: Get `comments` of a lesson
+      description: Get `comment` objects of a lesson
       parameters:
         - name: id 
           in: path 
           required: true
-          description: lesson id
+          description: the lesson id
           type: integer
           format: int64
       responses:
@@ -101,10 +101,30 @@ paths:
           description: Successful responses
           schema:
             title: ArrayOfComments
+            type: array
             items:
-              type: array
-              items:
                 $ref: '#/definitions/comment'
+    post:
+      description: Create 'comment' object for a lesson
+      parameters:
+        - name: id 
+          in: path 
+          required: true
+          description: the lesson id
+          type: integer
+          format: int64
+        - name: comment
+          in: body
+          required: true
+          description: new `comment` object
+          schema:
+            $ref: '#/definitions/comment'
+      responses:
+        '200':
+          description: Successful responses
+          schema:
+            $ref: '#/definitions/comment'
+              
         
         
 definitions:
@@ -158,6 +178,7 @@ definitions:
         type: integer
         format: int64
       lesson_id:
+        description: The lesson which it replies to. 
         type: integer
       content:
         type: string
