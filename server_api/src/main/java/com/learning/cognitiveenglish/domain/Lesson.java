@@ -1,7 +1,6 @@
 package com.learning.cognitiveenglish.domain;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.learning.cognitiveenglish.repository.converters.JsonConverters;
 import lombok.Data;
 
@@ -24,13 +23,14 @@ public class Lesson extends Auditable {
     private String name;
     private String url;
     private String description;
-    @JsonProperty("num_of_viewer")
     private int numOfViewer;
-    @JsonProperty("num_of_comments")
     private int numOfComments;
     @Convert(converter = JsonConverters.ListConvert.class)
     private List<String> tags;
-    @JsonProperty("publish_time")
-    @JsonFormat(pattern = "yyyy-MM-ddTHH:mm:ss")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date publishTime;
+
+    public void increaseComments(){
+        this.numOfComments ++;
+    }
 }
