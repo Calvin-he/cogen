@@ -29,7 +29,7 @@ var storage = multer.diskStorage({
 
 var upload = multer({
     storage: storage,
-    limits: {fileSize: 1000000 * 10, files:1 }
+    limits: {fieldSize: 1000000 * 10, files:1 }
 })
 
 upload.relativePath = function(file) {

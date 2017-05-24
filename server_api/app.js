@@ -31,10 +31,22 @@ fs.readdirSync('./models')
 
 app.use(auth.basicAuth);
 
+// cross domain middleware
+app.use(function(req, res, next) {
+   res.header("Access-Control-Allow-Origin", "*");
+   res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
+   res.header("Access-Control-Allow-Headers", "X-Requested-With,Content-Type,Cache-Control");
+   if (req.method === 'OPTIONS') {
+       res.statusCode = 204;
+       return res.end();
+   } else {
+       return next();
+   }
+});
+
 app.use('/lessons', require('./routes/lessons'));
 app.use('/media', require('./routes/media'));
 app.use('/series', require('./routes/series'));
-
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
