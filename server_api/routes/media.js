@@ -14,4 +14,8 @@ router.post('/', upload.single('file'), function(req, res, next) {
     media.save().then(doc => res.send(doc)).catch(next);
 })
 
+router.get('/:id', function(req, res, next) {
+    Media.findById(req.params.id).then(media => res.send(media)).catch(next);
+})
+
 module.exports = router
