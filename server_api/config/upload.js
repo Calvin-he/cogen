@@ -33,7 +33,8 @@ var upload = multer({
 })
 
 upload.relativePath = function(file) {
-    return file.path.replace(config.uploadDir, '');
+    var filepath = file.path.replace(config.uploadDir, '');
+    return filepath.replace(/\\/g, '/')
 }
 
 module.exports = upload;
