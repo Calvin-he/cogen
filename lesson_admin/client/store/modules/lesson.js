@@ -16,7 +16,6 @@ const actions = {
   },
 
   updateLesson ({ commit }, lesson) {
-    console.log(lesson)
     return Vue.axios.put('/lessons/' + lesson._id, lesson).then((response) => commit('UPDATELESSON', response.data))
   },
 

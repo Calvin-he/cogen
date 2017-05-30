@@ -19,14 +19,14 @@
   
         <article class="tile is-child box">
           <h4 class="title">所有课程</h4>
-          <table class="table">
+          <table class="table is-narrow">
             <thead>
               <tr>
                 <th>序号</th>
                 <th>课程名称</th>
                 <th>录音</th>
                 <th>更新时间</th>
-                <th></th>
+                <th>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>
               </tr>
             </thead>
             <tbody>
@@ -47,9 +47,9 @@
                     </span>
   
                   </td>
-                  <td>{{lesson.updated}}</td>
+                  <td>{{lesson.updated | date}}</td>
                   <td>
-                    <a class="button is-primary" v-show="!expanded[lesson._id]" @click="toggleLessonDetails(lesson)">
+                    <a class="button" v-show="!expanded[lesson._id]" @click="toggleLessonDetails(lesson)">
                       展开&nbsp;
                       <i class="fa fa-angle-right fa-2x"></i>
                     </a>

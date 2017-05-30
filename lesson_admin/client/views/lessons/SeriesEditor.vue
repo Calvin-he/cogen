@@ -1,7 +1,7 @@
 <template>
   <loading :loading="isloading">
     <div class="columns">
-      <div class="column">
+      <div class="column is-one-third">
         <div class="box">
         <p class="control">
           <input class="input" type="text" v-model.trim="ctrl_title.value" placeholder="课程系列标题" @blur="validateTitle">
@@ -15,7 +15,7 @@
       <div class="column">
         <div class="box">
         <p class="control">
-          <select-media v-model="ctrl_bannerId.value" @change="validateBanner" placeholder="请选择插图" extensions="png|jpg|gif" accept="image/*"></select-media>
+          <select-media v-model="ctrl_bannerId.value" @change="setBannerPath" placeholder="请选择插图" extensions="png|jpg|gif" accept="image/*"></select-media>
           <figure class="image is-128x128">
             <img v-show="ctrl_bannerId.bannerPath" :src="ctrl_bannerId.bannerPath">
           </figure>
@@ -92,13 +92,16 @@ export default {
       this.$set(this.ctrl_title.errors, 'required', this.isEmptyString(this.ctrl_title.value))
       return !this.ctrl_title.errors.required
     },
-
-    validateBanner (media) {
+    validateBanner () {
       this.$set(this.ctrl_bannerId.errors, 'required', this.isEmptyString(this.ctrl_bannerId.value))
-      if (media != null) {
-        this.ctrl_bannerId.bannerPath = media.path
-      }
       return !this.ctrl_bannerId.errors.required
+    },
+    setBannerPath (media) {
+      if (media) {
+        this.ctrl_bannerId.bannerPath = media.path
+      } else {
+        this.ctrl_bannerId.bannerPath = ''
+      }
     },
 
     isNew () {

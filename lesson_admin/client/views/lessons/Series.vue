@@ -20,11 +20,11 @@
           <table class="table">
             <thead>
               <tr>
-                <th></th>
+                <th>序号</th>
                 <th>标题</th>
                 <th>课程数</th>
                 <th>更新时间</th>
-                <th></th>
+                <th>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>
               </tr>
             </thead>
             <tfoot>
@@ -35,15 +35,13 @@
                   <td>{{index+1}}</td>
                   <td>{{series.title}}</td>
                   <td>{{series.lessonList.length}}</td>
-                  <td>{{series.updated}}</td>
+                  <td>{{series.updated | date}}</td>
                   <td>
-                    <a class="button is-primary" v-show="!expanded[series._id]" @click="toggleDetails(series)">
-                      展开&nbsp;
-                      <i class="fa fa-angle-right fa-2x"></i>
+                    <a class="button" v-show="!expanded[series._id]" @click="toggleDetails(series)">
+                      展开&nbsp;<i class="fa fa-angle-right fa-2x"></i>&nbsp;
                     </a>
                     <a class="button is-primary" v-show="expanded[series._id]" @click="toggleDetails(series)">
-                      隐藏&nbsp;
-                      <i class="fa fa-angle-down fa-2x"></i>
+                      隐藏&nbsp;<i class="fa fa-angle-down fa-2x"></i>
                     </a>
                   </td>
                 </tr>

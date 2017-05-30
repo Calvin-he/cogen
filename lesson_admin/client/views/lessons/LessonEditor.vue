@@ -6,7 +6,7 @@
     </p>
   
     <p class="control">
-      <select-media v-model="ctrl_mediaId.value" @change="validateAudio" placeholder="选择录音材料" extensions="mp3" accept="audio/mpeg"></select-media>
+      <select-media v-model="ctrl_mediaId.value"  placeholder="选择录音材料" extensions="mp3" accept="audio/mpeg"></select-media>
       <span class="help is-danger" v-show="ctrl_mediaId.errors.required">必须选择录音材料</span>
     </p>
   
@@ -21,7 +21,6 @@
   
     <p class="control">
       <button type="submit" class="button is-primary" @click="submit">提交</button>
-      <button class="button" @click="reset">重置</button>
     </p>
   </loading>
 </template>
