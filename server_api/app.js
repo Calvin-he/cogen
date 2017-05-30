@@ -25,7 +25,7 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.static(config.uploadDir));
 
-app.post('/login', auth.login);
+app.post('/api/1.0/login', auth.login);
 
 fs.readdirSync('./models')
   .filter(file => ~file.search(/^[^\.].*\.js$/))
@@ -46,9 +46,9 @@ app.use(function(req, res, next) {
    }
 });
 
-app.use('/lessons', require('./routes/lessons'));
-app.use('/media', require('./routes/media'));
-app.use('/series', require('./routes/series'));
+app.use('/api/1.0/lessons', require('./routes/lessons'));
+app.use('/api/1.0/media', require('./routes/media'));
+app.use('/api/1.0/series', require('./routes/series'));
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
