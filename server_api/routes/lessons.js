@@ -23,10 +23,16 @@ router.post('/', (req, res, next) => {
 
 router.put('/:id', (req, res, next) => {
     var fields = only(req.body, 'title content mediaId');
-    Media.findById(fields.mediaId).then(media => {
-        fields.mediaPath = media.path;
-        return Lesson.findByIdAndUpdate(req.params.id, fields, {new: true}).then((doc) => res.send(doc));
-    }).catch(next);
+    fields.updated = Date.now();
+    if(files.mediaId) {
+        Media.findById(fields.mediaId).then(media => {
+            fields.mediaPath = media.path;
+            return Lesson.findByIdAndUpdate(req.params.id, fields, {new: true}).then((doc) => res.send(doc));
+        }).catch(next);
+    }else {
+        Lesson.findByIdAndUpdate(req.params.id, fields, {new: true}).then((doc) => res.send(doc)).catch(next);
+    }
+    
 });
 
 router.delete('/:id', (req, res, next) => {

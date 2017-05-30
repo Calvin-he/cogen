@@ -15,6 +15,7 @@ router.post('/', (req, res, next) => {
 
 router.put('/:id', (req, res, next) => {
   var fields = only(req.body, 'title desc bannerId lessonList');
+  fields.updated = Date.now()
   Series.findByIdAndUpdate(req.params.id, fields, {new: true}).then((doc) => res.send(doc)).catch(next);
 });
 
