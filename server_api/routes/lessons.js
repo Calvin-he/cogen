@@ -25,7 +25,7 @@ router.put('/:id', (req, res, next) => {
     var fields = only(req.body, 'title content mediaId');
     Media.findById(fields.mediaId).then(media => {
         fields.mediaPath = media.path;
-        return Lesson.update({_id: req.params.id}, fields).then(() => res.sendStatus(200));
+        return Lesson.findByIdAndUpdate(req.params.id, fields, {new: true}).then((doc) => res.send(doc));
     }).catch(next);
 });
 
