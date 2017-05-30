@@ -11,7 +11,6 @@
 // }
 import Quill from 'quill'
 import Delta from 'quill-delta'
-import { lessonHttp } from '../../api/LessonApi'
 
 export default {
   name: 'QuillEditor',
@@ -113,18 +112,13 @@ export default {
         fileInput.style.width = '0.1px'
         fileInput.addEventListener('change', () => {
           if (fileInput.files != null && fileInput.files[0] != null) {
-            let formData = new window.FormData()
-            formData.append('file', fileInput.files[0])
-            let config = {
-              timeout: 10000
-            }
-            lessonHttp.post('media', formData, config).then((response) => {
+            this.$store.dispatch('addMedia', fileInput.fiels[0]).then((media) => {
               let range = this.quill.getSelection(true)
               console.log('range: ', range)
               this.quill.updateContents(new Delta()
                     .retain(range.index)
                     .delete(range.length)
-                    .insert({ image: response.data.path }))
+                    .insert({ image: media.path }))
               fileInput.value = ''
             })
           }

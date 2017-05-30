@@ -61,9 +61,10 @@ export default {
       var redirect = this.$auth.redirect()
       this.$auth.login({
         headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
+          'Authorization': 'Basic ' + window.btoa(this.data.body.username + ':' + this.data.body.password)
         },
-        data: this.data.body,
+        data: {},
         rememberMe: this.data.rememberMe,
         redirect: {name: redirect ? redirect.from.name : 'Home'},
         success (res) {
@@ -72,6 +73,7 @@ export default {
           // console.log(res)
         },
         error (err) {
+          console.log('err: ', err)
           if (err.response) {
             // The request was made, but the server responded with a status code
             // that falls out of the range of 2xx
@@ -83,7 +85,6 @@ export default {
             // Something happened in setting up the request that triggered an Error
             console.log('Error', err.message)
           }
-          console.log(err.config)
         }
       })
     }

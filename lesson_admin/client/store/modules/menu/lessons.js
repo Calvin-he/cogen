@@ -12,6 +12,7 @@ export default {
       name: '课程列表',
       path: '/lessons/lessonlist',
       meta: {
+        auth: true,
         label: '课程列表',
         link: 'lessons/LessonList.vue'
       },
@@ -20,6 +21,7 @@ export default {
       name: '课程系列列表',
       path: '/lessons/series',
       meta: {
+        auth: true,
         label: '课程系列列表',
         link: 'lessons/Series.vue'
       },

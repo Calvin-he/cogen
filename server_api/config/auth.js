@@ -5,7 +5,7 @@ exports.basicAuth = function(request, response, next) {
 
     function unauthorized(response) {
         response.set('WWW-Authenticate', 'Basic realm=Authorization Required');
-        return response.send(401);
+        return response.sendStatus(401);
     };
 
     var user = basicAuth(request);
@@ -22,3 +22,25 @@ exports.basicAuth = function(request, response, next) {
 
 };
 
+
+exports.login = function(request, response, next) {
+
+    function unauthorized(response) {
+        return response.sendStatus(401);
+    };
+
+    var user = basicAuth(request);
+    
+
+    if (!user || !user.name || !user.pass) {
+        return unauthorized(response);
+    };
+
+    if (user.name === config.username && user.pass === config.password) {
+        response.set('Authorization', request.headers.authorization);
+        return response.json({'message': 'login success'});
+    } else { 
+        return unauthorized(response);
+    };
+
+};

@@ -1,4 +1,4 @@
-import { lessonHttp } from '../../api/LessonApi'
+import Vue from 'vue'
 
 const state = {
   seriesList: [],
@@ -8,29 +8,29 @@ const state = {
 
 const actions = {
   listLessons ({ commit }) {
-    return lessonHttp.get('/lessons').then((response) => commit('LISTOFLESSONS', response.data))
+    return Vue.axios.get('/lessons').then((response) => commit('LISTOFLESSONS', response.data))
   },
 
   addLesson ({ commit }, lesson) {
-    return lessonHttp.post('/lessons', lesson).then((response) => commit('ADDLESSON', response.data))
+    return Vue.axios.post('/lessons', lesson).then((response) => commit('ADDLESSON', response.data))
   },
 
   updateLesson ({ commit }, lesson) {
     console.log(lesson)
-    return lessonHttp.put('/lessons/' + lesson._id, lesson).then((response) => commit('UPDATELESSON', response.data))
+    return Vue.axios.put('/lessons/' + lesson._id, lesson).then((response) => commit('UPDATELESSON', response.data))
   },
 
   listSeries ({ commit }) {
-    return lessonHttp.get('/series').then((response) => commit('LISTOFSERIES', response.data))
+    return Vue.axios.get('/series').then((response) => commit('LISTOFSERIES', response.data))
   },
   addSeries ({ commit }, series) {
-    return lessonHttp.post('/series', series).then((response) => {
+    return Vue.axios.post('/series', series).then((response) => {
       commit('ADDSERIES', response.data)
       return response.data
     })
   },
   updateSeries ({commit}, series) {
-    return lessonHttp.put('/series/' + series._id, series).then((response) => {
+    return Vue.axios.put('/series/' + series._id, series).then((response) => {
       commit('UPDATESERIES', response.data)
       return response.data
     })
@@ -38,7 +38,7 @@ const actions = {
 
   listMedia ({commit, state}) {
     if (state.mediaList.length === 0) {
-      return lessonHttp.get('/media').then((response) => commit('LISTOFMEDIA', response.data))
+      return Vue.axios.get('/media').then((response) => commit('LISTOFMEDIA', response.data))
     } else {
       return new Promise((resolve, reject) => {
         resolve(state.mediaList)
@@ -48,7 +48,7 @@ const actions = {
   addMedia ({commit}, file) {
     let formData = new window.FormData()
     formData.append('file', file)
-    return lessonHttp.post('./media', formData).then((response) => {
+    return Vue.axios.post('./media', formData).then((response) => {
       commit('ADDMEDIA', response.data)
       return response.data
     })

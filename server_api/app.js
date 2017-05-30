@@ -25,6 +25,8 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.static(config.uploadDir));
 
+app.post('/login', auth.login);
+
 fs.readdirSync('./models')
   .filter(file => ~file.search(/^[^\.].*\.js$/))
   .forEach(file => require('./models/' + file));
