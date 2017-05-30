@@ -7,11 +7,10 @@
     <h1 class="is-title is-bold">{{ name.replace('-', ' ') }}</h1>
 
     <p>
-      <strong>{{ description }}</strong>,
-      <a :href="homepage">Live Demo</a>
+      <strong>{{ description }}</strong>
     </p>
 
-    <p>Supports Vue 2.0 and Bulma 0.3!</p>
+    <p>Thanks to your kind advices, I can improve it.</p>
   </div>
 </template>
 

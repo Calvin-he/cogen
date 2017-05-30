@@ -1,13 +1,13 @@
 {
-  "name": "vue-admin",
-  "version": "0.1.12",
-  "description": "Vue Admin Panel Framework",
-  "repository": "vue-bulma/vue-admin",
+  "name": "cogen",
+  "version": "1.0.0",
+  "description": "课程管理平台",
+  "repository": "Calvin-he/cogen",
   "homepage": "https://admin.vuebulma.com",
   "license": "MIT",
   "author": {
-    "name": "Fangdun Cai",
-    "email": "cfddream@gmail.com",
+    "name": "Calvin He",
+    "email": "laybrick@163.com",
     "url": "fundon.me"
   },
   "keywords": [
@@ -16,7 +16,8 @@
     "dashboard",
     "data",
     "visualization",
-    "vue"
+    "vue",
+    "cogen"
   ],
   "engines": {
     "node": ">=4",
