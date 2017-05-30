@@ -15,7 +15,8 @@
       <div class="column">
         <div class="box">
         <p class="control">
-          <select-media v-model="ctrl_bannerId.value" @change="setBannerPath" placeholder="请选择插图" extensions="png|jpg|gif" accept="image/*"></select-media>
+          <select-media v-model="ctrl_bannerId.value" @change="setBannerPath" placeholder="请选择插图" 
+              extensions="png|jpg|gif" accept="image/png, image/jpeg, image/gif"></select-media>
           <figure class="image is-128x128">
             <img v-show="ctrl_bannerId.bannerPath" :src="ctrl_bannerId.bannerPath">
           </figure>

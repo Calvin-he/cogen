@@ -10,7 +10,7 @@
       <strong>{{ description }}</strong>
     </p>
 
-    <p>Thanks to your kind advices, I can improve it.</p>
+    <p>Thanks to your kind advices, We can improve it.</p>
   </div>
 </template>
 
