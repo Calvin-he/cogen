@@ -31,7 +31,7 @@ fs.readdirSync('./models')
   .filter(file => ~file.search(/^[^\.].*\.js$/))
   .forEach(file => require('./models/' + file));
 
-app.use(auth.basicAuth);
+app.use('/api/', auth.basicAuth);
 
 // cross domain middleware
 app.use(function(req, res, next) {

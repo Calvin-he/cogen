@@ -10,3 +10,5 @@ log/
 gen/
 classes/
 uploads/
+dist/
+server_api/public/admin/
