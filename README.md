@@ -9,3 +9,4 @@
 # 发布流程
 ./deploy api  发布server_api
 ./deploy ui   发布ui
+./deploy all   发布所有
