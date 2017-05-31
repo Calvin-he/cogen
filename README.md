@@ -7,5 +7,5 @@
 - **desgin_docs** put discussion documents and desgin documents here
 
 # 发布流程
-./deploy  发布server_api
-./deploy ui 发布ui和server_api
+./deploy api  发布server_api
+./deploy ui   发布ui
