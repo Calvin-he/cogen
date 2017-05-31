@@ -23,7 +23,7 @@ const webpackConfig = merge(baseWebpackConfig, {
   devtool: config.build.productionSourceMap ? '#source-map' : false,
   output: {
     path: config.build.assetsRoot,
-    publicPath: isELECTRON ? path.join(__dirname, '../dist/') : '/',
+    publicPath: isELECTRON ? path.join(__dirname, '../dist/') : config.build.assetsPublicPath,
     filename: utils.assetsPath('js/[name].[chunkhash].js'),
     chunkFilename: utils.assetsPath('js/[id].[chunkhash].js')
   },
@@ -51,7 +51,7 @@ const webpackConfig = merge(baseWebpackConfig, {
     // you can customize output by editing /index.html
     // see https://github.com/ampedandwired/html-webpack-plugin
     new HtmlWebpackPlugin({
-      title: 'Vue Admin',
+      title: 'Cogen Admin',
       filename: process.env.NODE_ENV === 'testing'
         ? 'index.html'
         : config.build.index,

@@ -31,10 +31,7 @@ module.exports = {
       },
       '/api': {
         target: 'http://localhost:3000',
-        changeOrigin: true,
-        pathRewrite: {
-          '/api/1.0': '/'
-        }
+        changeOrigin: true
       },
       '/uploads': {
         target: 'http://localhost:3000',

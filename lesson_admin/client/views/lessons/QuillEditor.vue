@@ -112,7 +112,7 @@ export default {
         fileInput.style.width = '0.1px'
         fileInput.addEventListener('change', () => {
           if (fileInput.files != null && fileInput.files[0] != null) {
-            this.$store.dispatch('addMedia', fileInput.fiels[0]).then((media) => {
+            this.$store.dispatch('addMedia', fileInput.files[0]).then((media) => {
               let range = this.quill.getSelection(true)
               console.log('range: ', range)
               this.quill.updateContents(new Delta()
