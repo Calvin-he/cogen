@@ -6,4 +6,4 @@ if [ "$1" = "ui" ]; then
     npm run build
 fi
 rsync -av --delete --exclude=**/*.map dist/ dev@de2:/home/www/eyang/airflow/ce/code/public/
-#ssh dev@de2 '/home/www/eyang/airflow/ce/startServer.sh'
+ssh dev@de2 '/home/www/eyang/airflow/ce/startServer.sh'
