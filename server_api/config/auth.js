@@ -8,6 +8,10 @@ exports.basicAuth = function(request, response, next) {
         return response.sendStatus(401);
     };
 
+    if(request.method.toUpperCase() === 'GET'){
+        return next();
+    }
+
     var user = basicAuth(request);
 
     if (!user || !user.name || !user.pass) {

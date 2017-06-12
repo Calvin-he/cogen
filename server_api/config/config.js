@@ -5,7 +5,10 @@ var Config = {
   port: 3000,
   uploadDir: 'uploads',
   username: 'admin',
-  password: '111111'
+  password: '111111',
+  appid: '',
+  secret: '',
+  redirectURL: ''
 }
 
 module.exports = Config;
