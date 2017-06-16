@@ -18,7 +18,7 @@
         <div class="media-left">
           <a class="button is-primary is-outlined">
             <span class="icon">
-              <i class="fa fa-lock"></i>
+              <i class="fa fa-play"></i>
             </span>
           </a>
         </div>
@@ -99,6 +99,10 @@ export default {
 }
 
 .media {
-  align-items: center;
+  align-items: center; 
 }
+.media + .media {
+  padding-top: 0;
+}
+
 </style>
