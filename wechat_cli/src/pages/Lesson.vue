@@ -5,9 +5,9 @@
         <a class="nav-item" @click="$router.go(-1)"><i class="fa fa-arrow-left"></i></a>
       </div>
       <div class="nav-center">
-        <div class="nav-item">
+        <router-link class="nav-item" :to="{name: 'SeriesIntro', params: {seriesId: series._id}}" replace>
           {{series.title}}
-        </div>
+        </router-link>
       </div>
       <div class="nav-right">
         <div class="nav-item">&nbsp;&nbsp;&nbsp;</div>

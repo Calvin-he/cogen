@@ -46,7 +46,7 @@ router.get('/:id', (req, res, next) => {
 });
 
 router.post('/search', (req,res, next) => {
-    var lesson_ids = only(req.body, 'lesson_ids').lesson_ids;
+    var lesson_ids = only(req.body, 'lesson_ids series_id').lesson_ids;
     Lesson.find({_id : {$in: lesson_ids}}, '_id, title mediaPath').then(docs => {
         res.send(docs)
     }).catch(next)

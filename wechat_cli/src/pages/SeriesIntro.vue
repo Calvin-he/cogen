@@ -5,8 +5,13 @@
     </figure>
   
     <section class="section">
-      <h4 class="title">{{series.title}}</h4>
+      <h4 class="subtitle is-4">{{series.title}}</h4>
       <p class="content">{{series.desc}}
+      </p>
+    </section>
+    <section class="section">
+      <h4 class="subtitle is-4">购买须知</h4>
+      <p class="content">。。。。
       </p>
     </section>
   
@@ -31,6 +36,12 @@
 <script>
 export default {
   name: 'SeriesIntro',
+  props: {
+    seriesId: {
+      type: String,
+      requried: true
+    }
+  },
   data () {
     return {
       series: {}
@@ -44,7 +55,7 @@ export default {
   },
 
   mounted () {
-    let seriesId = this.$route.params.series_id
+    let seriesId = this.seriesId
     this.$store.dispatch('getSeries', seriesId).then((series) => {
       this.series = series
     }).catch((error) => {
