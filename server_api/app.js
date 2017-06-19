@@ -37,11 +37,11 @@ app.use(session({ secret: 'abcd1234567890', cookie: { maxAge: 60000 }}));
 app.use(function(req, res, next){
     if(req.path.startsWith("/auth")){
         console.log("code", req.query.code);
-        wxclient.getUser(req.query.code, function(err, result){
+        wxclient.getAccessToken(req.query.code, function(err, result){
             if(err){
                 console.log("err:", err);
             }else{
-                res.redirect(req.session.savedPath);
+                res.send(result);
             }
         });
     } else {
