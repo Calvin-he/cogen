@@ -1,31 +1,21 @@
-var basicAuth = require('basic-auth');
+var basicAuth0 = require('basic-auth');
 var config = require('./config');
+var wxclient = require('./wxclient');
 
-exports.basicAuth = function(request, response, next) {
+var basicAuth = function(req, response, next) {
 
     function unauthorized(response) {
         response.set('WWW-Authenticate', 'Basic realm=Authorization Required');
         return response.sendStatus(401);
     };
-
-    request.user = {isAdmin: false};
-    const userId = request.header('Authorization');
-    if(userId){
-        request.user.id = userId;
-    }
-
-    if(request.method.toUpperCase() === 'GET'){
-        return next();
-    }
-
-    var user = basicAuth(request);
+    var user = basicAuth0(req);
 
     if (!user || !user.name || !user.pass) {
         return unauthorized(response);
     };
 
     if (user.name === config.username && user.pass === config.password) {
-        request.user.isAdmin = true;
+        req.user.isAdmin = true;
         return next();
     } else {
         return unauthorized(response);
@@ -33,25 +23,26 @@ exports.basicAuth = function(request, response, next) {
 
 };
 
+module.exports = function(req, res, next){
+    if(req.path.startsWith("/auth")){
+        wxclient.getAccessToken(req.query.code, function(err, result){
+            if(err){
+                console.log("err:", err);
+                res.send(err);
+            }else{
+                res.send({user: {openid: result.data.openid}, token: result.data.openid, data: result.data});
+            }
+        });
+    }else{
+        req.user = {isAdmin: false};
+        var userId = req.header('Authorization');
+        if(userId){
+            req.user.id = userId;
+            next();
+        }else{
+            //res.redirect(wxclient.authorizeURL);
+            basicAuth(req, res, next)
+        }
+    }
+}
 
-exports.login = function(request, response, next) {
-
-    function unauthorized(response) {
-        return response.sendStatus(401);
-    };
-
-    var user = basicAuth(request);
-    
-
-    if (!user || !user.name || !user.pass) {
-        return unauthorized(response);
-    };
-
-    if (user.name === config.username && user.pass === config.password) {
-        response.set('Authorization', request.headers.authorization);
-        return response.json({'message': 'login success'});
-    } else { 
-        return unauthorized(response);
-    };
-
-};

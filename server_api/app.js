@@ -8,7 +8,6 @@ var bodyParser = require('body-parser');
 var mongoose = require('mongoose');
 var config = require('./config/config');
 var fs = require('fs');
-var auth = require('./config/auth');
 
 var app = express();
 
@@ -44,8 +43,7 @@ app.use(function(req, res, next) {
    }
 });
 
-app.use('/api/', auth.basicAuth);
-app.use('/auth', require('./routes/auth'));
+app.use(require('./config/auth'));
 app.use('/api/1.0/lessons', require('./routes/lessons'));
 app.use('/api/1.0/media', require('./routes/media'));
 app.use('/api/1.0/series', require('./routes/series'));
