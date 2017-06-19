@@ -18,10 +18,10 @@ const weauth = {
 
 export default {
   install (Vue, { router, axios, appid }) {
-    if (Vue.$router == null) {
+    if (router == null) {
       console.error('Please use Plugin VueRouter first')
     }
-    if (Vue.$axios == null) {
+    if (axios == null) {
       console.error('Please use Plugin VueAxios first')
     }
     Vue.weauth = weauth
@@ -42,7 +42,7 @@ export default {
     })
 
     router.beforeEach((to, from, next) => {
-      if (weauth.hasAuth()) {
+      if (weauth) {
         next()
       } else {
         if (to.query.code != null && to.query.state != null) {

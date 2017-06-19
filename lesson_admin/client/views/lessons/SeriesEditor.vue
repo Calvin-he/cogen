@@ -30,10 +30,12 @@
       <div class="column">
         <div class="box">
           <h4 class="subtitle">选中课程</h4>
-          <draggable v-model="ctrl_lessonList.value" :options="{group:'lessons'}" class="draggable">
+          <draggable v-model="ctrl_lessonList.value" :options="{group:'lessons'}" class="draggable" @change="onChangeLessonList">
             <transition-group class="draggable-container">
               <div v-for="element in ctrl_lessonList.value" :key="element._id" class="draggable-item">
                 {{element.title}}
+                <label class="checkbox is-pulled-right"><input type="checkbox" 
+                  v-model="ctrl_freeLessons.value[element._id]">试读</label>
               </div>
             </transition-group>
           </draggable>
@@ -79,7 +81,8 @@ export default {
       ctrl_title: { value: null, errors: {} },
       ctrl_desc: { value: null, errors: {} },
       ctrl_bannerId: { value: null, bannerPath: null, errors: {} },
-      ctrl_lessonList: { unselected: [], value: [], errors: {} }
+      ctrl_lessonList: { unselected: [], value: [], errors: {} },
+      ctrl_freeLessons: {value: {}, errors: {}}
     }
   },
   mounted () {
@@ -138,6 +141,16 @@ export default {
       this.ctrl_lessonList = {
         value: selected, unselected: unselected, errors: {}
       }
+
+      let freeLessons = this.series.freeLessons || []
+      freeLessons = freeLessons.reduce((result, item) => {
+        result[item] = true
+        return result
+      }, {})
+      this.ctrl_freeLessons = {
+        value: freeLessons,
+        errors: {}
+      }
     },
     submit () {
       let valid = this.validateTitle()
@@ -146,12 +159,14 @@ export default {
         return false
       }
       let selectedLessonIds = this.ctrl_lessonList.value.map(v => v._id)
+      let freeLessonIds = Object.keys(this.ctrl_freeLessons.value).filter(lid => (this.ctrl_freeLessons.value[lid] === true))
       if (this.isNew()) {
         let data = {
           title: this.ctrl_title.value,
           desc: this.ctrl_desc.value,
           bannerId: this.ctrl_bannerId.value,
-          lessonList: selectedLessonIds
+          lessonList: selectedLessonIds,
+          freeLessons: freeLessonIds
         }
         this.isloading = true
         this.$store.dispatch('addSeries', data).then((series) => {
@@ -172,6 +187,9 @@ export default {
         }
         if (!this.equalOfArray(selectedLessonIds, this.series.lessonList)) {
           data.lessonList = selectedLessonIds
+        }
+        if (!this.equalOfArray(freeLessonIds, this.series.freeLessons)) {
+          data.freeLessons = freeLessonIds
         }
         if (Object.keys(data).length > 0) {
           data._id = this.series._id
@@ -196,6 +214,14 @@ export default {
 
     isEmptyString (v) {
       return v === null || v.trim().length === 0
+    },
+
+    onChangeLessonList (operation) {
+      let removed = operation.removed
+      if (removed) {
+        let rid = removed.element._id
+        this.ctrl_freeLessons.value[rid] = false
+      }
     }
   },
   components: {
