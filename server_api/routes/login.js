@@ -15,3 +15,9 @@ router.post( '/', function( req, res, next ) {
     return unauthorized( response );
   };
 } )
+
+router.get('/wxtest', function(req, res, next) {
+    res.send({message: 'Hello'})
+})
+
+module.exports = router

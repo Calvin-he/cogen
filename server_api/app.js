@@ -1,4 +1,5 @@
 var express = require('express');
+var session = require('express-session');
 var path = require('path');
 var favicon = require('serve-favicon');
 var logger = require('morgan');
@@ -8,6 +9,7 @@ var mongoose = require('mongoose');
 var config = require('./config/config');
 var fs = require('fs');
 var auth = require('./config/auth');
+var wxclient = require('./config/wxclient')
 
 var app = express();
 
@@ -31,6 +33,28 @@ fs.readdirSync('./models')
   .filter(file => ~file.search(/^[^\.].*\.js$/))
   .forEach(file => require('./models/' + file));
 
+app.use(session({ secret: 'abcd1234567890', cookie: { maxAge: 60000 }}));
+app.use(function(req, res, next){
+    if(req.path.startsWith("/auth")){
+        console.log("code", req.query.code);
+        wxclient.getUser(req.query.code, function(err, result){
+            if(err){
+                console.log("err:", err);
+            }else{
+                res.redirect(req.session.savedPath);
+            }
+        });
+    } else {
+        var openId = req.session.openId;
+        if(!openId){
+            req.session.savedPath = req.path;
+            console.log("authorizeURL: ", wxclient.authorizeURL);
+            res.redirect(wxclient.authorizeURL);
+        }else{
+            next();
+        }
+    }
+});
 app.use('/api/', auth.basicAuth);
 
 // cross domain middleware
@@ -49,6 +73,7 @@ app.use(function(req, res, next) {
 app.use('/api/1.0/lessons', require('./routes/lessons'));
 app.use('/api/1.0/media', require('./routes/media'));
 app.use('/api/1.0/series', require('./routes/series'));
+app.use('/login', require('./routes/login'));
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
