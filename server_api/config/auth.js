@@ -8,6 +8,12 @@ exports.basicAuth = function(request, response, next) {
         return response.sendStatus(401);
     };
 
+    request.user = {isAdmin: false};
+    const userId = request.header('Authorization');
+    if(userId){
+        request.user.id = userId;
+    }
+
     if(request.method.toUpperCase() === 'GET'){
         return next();
     }
@@ -19,6 +25,7 @@ exports.basicAuth = function(request, response, next) {
     };
 
     if (user.name === config.username && user.pass === config.password) {
+        request.user.isAdmin = true;
         return next();
     } else {
         return unauthorized(response);

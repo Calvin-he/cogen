@@ -9,7 +9,6 @@ var mongoose = require('mongoose');
 var config = require('./config/config');
 var fs = require('fs');
 var auth = require('./config/auth');
-var wxclient = require('./config/wxclient')
 
 var app = express();
 
@@ -27,42 +26,10 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.static(config.uploadDir));
 
-app.post('/api/1.0/login', auth.login);
-
 fs.readdirSync('./models')
   .filter(file => ~file.search(/^[^\.].*\.js$/))
   .forEach(file => require('./models/' + file));
 
-app.use(session({
-  secret: 'abcdefg123456',
-  resave: false,
-  saveUninitialized: true
-}))
-app.use(function(req, res, next){
-    if(req.path.startsWith("/auth")){
-        console.log("code", req.query.code);
-        wxclient.getAccessToken(req.query.code, function(err, result){
-            if(err){
-                console.log("err:", err);
-            }else{
-                req.session.openid = result.data.openid;
-                res.redirect(req.session.savedPath);
-            }
-        });
-    } else {
-        console.log("session:", req.session);
-        console.log("session.openid:", req.session.openid);
-        var openid = req.session.openid;
-        if(!openid){
-            req.session.savedPath = req.path;
-            console.log("authorizeURL: ", wxclient.authorizeURL);
-            res.redirect(wxclient.authorizeURL);
-        }else{
-            next();
-        }
-    }
-});
-app.use('/api/', auth.basicAuth);
 
 // cross domain middleware
 app.use(function(req, res, next) {
@@ -77,10 +44,11 @@ app.use(function(req, res, next) {
    }
 });
 
+app.use('/api/', auth.basicAuth);
+app.use('/auth', require('./routes/auth'));
 app.use('/api/1.0/lessons', require('./routes/lessons'));
 app.use('/api/1.0/media', require('./routes/media'));
 app.use('/api/1.0/series', require('./routes/series'));
-app.use('/login', require('./routes/login'));
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
