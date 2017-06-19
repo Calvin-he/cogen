@@ -33,7 +33,11 @@ fs.readdirSync('./models')
   .filter(file => ~file.search(/^[^\.].*\.js$/))
   .forEach(file => require('./models/' + file));
 
-app.use(session({ secret: 'abcd1234567890', cookie: { maxAge: 60000 }}));
+app.use(session({
+  secret: 'abcdefg123456',
+  resave: false,
+  saveUninitialized: true
+}))
 app.use(function(req, res, next){
     if(req.path.startsWith("/auth")){
         console.log("code", req.query.code);
@@ -41,12 +45,15 @@ app.use(function(req, res, next){
             if(err){
                 console.log("err:", err);
             }else{
-                res.send(result);
+                req.session.openid = result.data.openid;
+                res.redirect(req.session.savedPath);
             }
         });
     } else {
-        var openId = req.session.openId;
-        if(!openId){
+        console.log("session:", req.session);
+        console.log("session.openid:", req.session.openid);
+        var openid = req.session.openid;
+        if(!openid){
             req.session.savedPath = req.path;
             console.log("authorizeURL: ", wxclient.authorizeURL);
             res.redirect(wxclient.authorizeURL);
