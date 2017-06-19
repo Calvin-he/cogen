@@ -1,13 +1,13 @@
 <template>
-  <div class="container is-fluid">
+  <div class="container">
     <header class="nav">
       <div class="nav-left">
         <a class="nav-item" @click="$router.go(-1)"><i class="fa fa-arrow-left"></i></a>
       </div>
       <div class="nav-center">
-        <div class="nav-item">
+        <router-link class="nav-item" :to="{name: 'SeriesIntro', params: {seriesId: series._id}}" replace>
           {{series.title}}
-        </div>
+        </router-link>
       </div>
       <div class="nav-right">
         <div class="nav-item">&nbsp;&nbsp;&nbsp;</div>
@@ -20,9 +20,7 @@
         <span class="publish-date">2017-06-03</span>
         <a class="public-account">公众号</a>
       </div>
-      <div>
-        <audio :src="lesson.mediaPath" controls></audio>
-      </div>
+      <audio-player :audio-url="lesson.mediaPath" class="audio-player"></audio-player>
       <article class="content" v-html="lesson.content">
       </article>
     </div>
@@ -32,7 +30,7 @@
 </template>
 
 <script>
-// import AudioPlayer from '../components/AudioPlayer'
+import AudioPlayer from '../components/AudioPlayer'
 
 export default {
   name: 'Lesson',
@@ -44,7 +42,7 @@ export default {
   data () {
     return {
       series: {},
-      lesson: {}
+      lesson: {mediaPath: ''}
     }
   },
   watch: {
@@ -63,7 +61,7 @@ export default {
     })
   },
   components: {
-    // AudioPlayer
+    AudioPlayer
   }
 }
 </script>
@@ -71,5 +69,9 @@ export default {
 <style>
 .full-width {
   width: 100%
+}
+.audio-player {
+  margin-top: 10px;
+  margin-bottom: 10px;
 }
 </style>

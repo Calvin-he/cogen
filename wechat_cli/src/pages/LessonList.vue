@@ -5,9 +5,7 @@
          <div class="nav-item">&nbsp;&nbsp;</div>
        </div>
       <div class="nav-center">
-        <div class="nav-item">
-          {{series.title}}
-        </div>
+        <router-link class="nav-item" :to="{name: 'SeriesIntro', params: {seriesId: series._id}}" replace>{{series.title}}</router-link>
       </div>
        <div class="nav-right">
          <div class="nav-item">&nbsp;&nbsp;</div>
@@ -18,7 +16,8 @@
         <div class="media-left">
           <a class="button is-primary is-outlined">
             <span class="icon">
-              <i class="fa fa-lock"></i>
+              <i class="fa fa-play" v-if="lesson.mediaPath"></i>
+              <i class="fa fa-lock" v-else></i>
             </span>
           </a>
         </div>
@@ -44,6 +43,12 @@ import InfiniteLoading from 'vue-infinite-loading'
 
 export default {
   name: 'LessonList',
+  props: {
+    seriesId: {
+      type: String,
+      required: true
+    }
+  },
   data () {
     return {
       series: {},
@@ -56,7 +61,7 @@ export default {
   methods: {
     onInfinite () {
       if (this.series._id == null) {
-        this.$store.dispatch('getSeries', this.$route.params.series_id).then((series) => {
+        this.$store.dispatch('getSeries', this.seriesId).then((series) => {
           this.series = series
           this._loadMoreLessons()
         })
@@ -99,6 +104,10 @@ export default {
 }
 
 .media {
-  align-items: center;
+  align-items: center; 
 }
+.media + .media {
+  padding-top: 0;
+}
+
 </style>

@@ -7,6 +7,7 @@ var SeriesSchema = new mongoose.Schema({
   desc: { type : String, default : '', trim : true },
   bannerId: { type: mongoose.Schema.ObjectId, ref: 'Media', required: true},
   lessonList: { type: [String]},
+  freeLessons: {type: [String]},
   created: {type: Date, default: Date.now },
   updated: {type: Date, default: Date.now }
 });

@@ -70,7 +70,8 @@ export default {
         title: null,
         desc: null,
         bannerId: null,
-        lessonList: []
+        lessonList: [],
+        freeLessons: []
       }
     }
   },
