@@ -25,14 +25,18 @@ var basicAuth = function(req, response, next) {
 
 module.exports = function(req, res, next){
     if(req.path.startsWith("/auth")){
-        wxclient.getAccessToken(req.query.code, function(err, result){
-            if(err){
-                console.log("err:", err);
-                res.send(err);
-            }else{
-                res.send({user: {openid: result.data.openid}, token: result.data.openid, data: result.data});
-            }
-        });
+        if(req.query.origin === 'wechat'){
+            wxclient.getAccessToken(req.query.code, function(err, result){
+                if(err){
+                    console.log("err:", err);
+                    res.send(err);
+                }else{
+                    res.send({user: {openid: result.data.openid}, token: result.data.openid, data: result.data});
+                }
+            });
+        }else {
+            basicAuth(req, res, next)
+        }
     }else{
         req.user = {isAdmin: false};
         var userId = req.header('Authorization');

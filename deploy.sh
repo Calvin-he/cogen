@@ -7,7 +7,7 @@ deploy_ui(){
     cd lesson_admin
     npm install
     npm run build
-    rsync -av --delete --exclude=**/*.map dist/ dev@air:/home/www/ce/code/public/
+    rsync -av --delete --exclude=**/*.map dist/ dev@air:/home/www/ce/code/public/admin/
 }
 
 case $1 in
