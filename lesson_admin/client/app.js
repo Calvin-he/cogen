@@ -25,13 +25,13 @@ Vue.use(VueAuth, {
     response: function (res) {
       // Get Token from response body
       // var token = this.options._getHeaders.call(this, res).Authorization
-      let token = res.headers.authorization
+      let token = res.data.token
       return token
     }
   },
   http: require('@websanova/vue-auth/drivers/http/axios.1.x.js'),
   router: require('@websanova/vue-auth/drivers/router/vue-router.2.x.js'),
-  loginData: { url: '/login', fetchUser: false },
+  loginData: { url: '/auth', method: 'GET', fetchUser: false },
   refreshData: { enabled: false }
 })
 

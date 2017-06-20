@@ -43,10 +43,15 @@ app.use(function(req, res, next) {
    }
 });
 
-app.use(require('./config/auth'));
-app.use('/api/1.0/lessons', require('./routes/lessons'));
-app.use('/api/1.0/media', require('./routes/media'));
-app.use('/api/1.0/series', require('./routes/series'));
+app.use('/api/1.0/auth', require('./routes/auth'))
+
+apiApp = express();
+apiApp.use(require('./config/auth'))
+apiApp.use('/lessons', require('./routes/lessons'));
+apiApp.use('/media', require('./routes/media'));
+apiApp.use('/series', require('./routes/series'));
+app.use('/api/1.0', apiApp);
+
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

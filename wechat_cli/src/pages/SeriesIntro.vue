@@ -16,7 +16,7 @@
     </section>
   
     <div class="footer">
-      <div class="columns is-mobile" v-if="!paid">
+      <div class="columns is-mobile" v-if="!isPaid()">
         <div class="column">
           <a class=" button is-primary is-outlined" @click="gotoLessonList">试课</a>
         </div>
@@ -71,6 +71,12 @@ export default {
 
     gotoPayment () {
       this.$router.push({name: 'payment', params: {series_id: this.series_id}})
+    },
+
+    isPaid () {
+      let user = this.$auth.user()
+      let series = (user.series || []).find(v => v.seriesId === this.seriesId)
+      return series != null
     }
   }
 }

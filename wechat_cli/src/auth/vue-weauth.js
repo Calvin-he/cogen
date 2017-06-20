@@ -42,7 +42,7 @@ export default {
     })
 
     router.beforeEach((to, from, next) => {
-      if (weauth) {
+      if (weauth.hasAuth()) {
         next()
       } else {
         if (to.query.code != null && to.query.state != null) {
@@ -58,7 +58,7 @@ export default {
         } else {
           // jump to wechat auth url
           let fullPath = encodeURIComponent(location.protocol + '//' + location.hostname + to.fullPath)
-          let wechatUrl = `https://open.weixin.qq.com/connect/oauth2/authorize?appid=${appid}&redirect_uri=${fullPath}&response_type=code&scope=nsapi_userinfo&state=Rzyyxx#wechat_redirect`
+          let wechatUrl = `https://open.weixin.qq.com/connect/oauth2/authorize?appid=${appid}&redirect_uri=${fullPath}&response_type=code&scope=snsapi_base&state=Rzyyxx#wechat_redirect`
           window.location.href = wechatUrl
         }
       }

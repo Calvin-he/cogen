@@ -6,8 +6,8 @@ var Config = {
   uploadDir: 'uploads',
   username: 'admin',
   password: '111111',
-  appid: 'wx1a8a29af3beb8269',
-  secret: 'e0346336b3b3202732e6211b7d1f7f01',
+  appid: 'wx1ac88143b7396b56',
+  secret: '59950ad26fcef1e32e2ba33a29aba58a',
   baseUrl: 'http://192.168.199.5:3000'
 }
 

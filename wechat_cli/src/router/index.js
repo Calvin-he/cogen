@@ -3,13 +3,18 @@ import Router from 'vue-router'
 import LessonList from 'pages/LessonList'
 import Lesson from 'pages/Lesson'
 import SeriesIntro from 'pages/SeriesIntro'
+import Login from 'auth/Login'
 
 Vue.use(Router)
 
 const router = new Router({
   routes: [{
+    name: 'Login',
+    path: '/login',
+    component: Login
+  }, {
     name: 'LessonList',
-    path: '/lesson-list/:seriesId',
+    path: '/lessonlist/:seriesId',
     meta: {auth: true},
     component: LessonList,
     props: true
@@ -21,7 +26,7 @@ const router = new Router({
     props: true
   }, {
     name: 'SeriesIntro',
-    path: '/series-intro/:seriesId',
+    path: '/seriesintro/:seriesId',
     meta: {auth: true},
     component: SeriesIntro,
     props: true

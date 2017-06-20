@@ -69,7 +69,7 @@ devMiddleware.waitUntilValid(() => {
   console.log('> Listening at ' + uri + '\n')
 })
 
-module.exports = app.listen(port, err => {
+module.exports = app.listen(port, '0.0.0.0', err => {
   if (err) {
     console.log(err)
     return
