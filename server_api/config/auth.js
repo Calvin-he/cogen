@@ -28,24 +28,30 @@ module.exports = function(req, res, next){
         if(req.query.origin === 'wechat'){
             wxclient.getAccessToken(req.query.code, function(err, result){
                 if(err){
-                    console.log("err:", err);
                     res.send(err);
                 }else{
                     res.send({user: {openid: result.data.openid}, token: result.data.openid, data: result.data});
                 }
             });
-        }else {
-            basicAuth(req, res, next)
+        }else if(req.query.origin === 'cogen'){
+            if(req.query.username  === config.username && req.query.password === config.password){
+                res.send({token: req.query.username});
+            }else{
+                res.sendStatus(401);
+            }
+        }else{
+            res.sendStatus(404);
         }
     }else{
-        req.user = {isAdmin: false};
         var userId = req.header('Authorization');
         if(userId){
-            req.user.id = userId;
+            var isAdmin = userId === config.username
+                req.user = {isAdmin: isAdmin, id: userId};
             next();
         }else{
             //res.redirect(wxclient.authorizeURL);
-            basicAuth(req, res, next)
+            //basicAuth(req, res, next)
+            res.sendStatus(401);
         }
     }
 }
