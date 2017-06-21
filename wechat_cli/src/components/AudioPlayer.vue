@@ -66,7 +66,7 @@ export default {
       if (!this.isPlaying) {
         this.play()
       } else {
-        this.pause()
+        this.stop()
       }
     },
 
@@ -76,6 +76,7 @@ export default {
         this.isPlaying = true
       }
     },
+
     pause () {
       if (this.isPlaying) {
         this.audio.pause()
@@ -85,11 +86,11 @@ export default {
 
     stop () {
       if (this.isPlaying) {
+        this.isPlaying = false
         this.audio.pause()
         this.audio.currentTime = 0
         this.currentTime = '00:00'
         this.playPercent = 0
-        this.isPlaying = false
       }
     },
 

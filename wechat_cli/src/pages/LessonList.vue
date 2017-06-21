@@ -14,10 +14,11 @@
     <div class="section">
       <div class="media" v-for="lesson in lessonList">
         <div class="media-left">
-          <a class="button is-primary is-outlined">
+          <a class="button is-primary is-outlined" @click.prevent="play(lesson)">
             <span class="icon">
-              <i class="fa fa-play" v-if="lesson.mediaPath"></i>
-              <i class="fa fa-lock" v-else></i>
+              <i class="fa fa-lock" v-if="!lesson.mediaPath"></i>
+              <i class="fa fa-pause" v-else-if="lesson === currentPlayingLesson">
+              <i class="fa fa-play" v-else></i>
             </span>
           </a>
         </div>
@@ -53,10 +54,15 @@ export default {
     return {
       series: {},
       lessonList: [],
-      count: 0
+      count: 0,
+      currentPlayingLesson: null
     }
   },
   computed: {
+
+  },
+  mounted () {
+    this.audio = this.refs.myaudio
   },
   methods: {
     onInfinite () {
@@ -88,6 +94,20 @@ export default {
 
     gotoLesson (lessonId) {
       this.$router.push({ name: 'Lesson', params: { lessonId: lessonId, seriesId: this.series._id } })
+    },
+
+    play (lesson) {
+      if (!lesson.mediaPath) {
+        return
+      } else if (lesson !== this.currentPlayingLesson) {
+        this.currentPlayingLesson = lesson
+        this.audio.src = lesson.mediaPath
+        this.audio.play()
+      } else {
+        this.currentPlayingLesson = null
+        this.audio.pause()
+        this.audio.src = ''
+      }
     }
 
   },
