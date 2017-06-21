@@ -10,6 +10,13 @@ deploy_ui(){
     rsync -av --delete --exclude=**/*.map dist/ dev@air:/home/www/ce/code/public/admin/
 }
 
+deploy_we(){
+    cd wechat_cli
+    npm install
+    npm run build
+    rsync -av -delete --exclude=**/*.map dist/ dev@air:/home/www/ce/code/public/wechat/
+}
+
 case $1 in
     api)
         deploy_api
@@ -17,12 +24,16 @@ case $1 in
     ui)
         deploy_ui
         ;;
+    we)
+        deploy_we
+        ;;
     all)
         deploy_api
         deploy_ui
+        deploy_we
         ;;
     *)
-        echo "usage: ./deploy api|ui|all"
+        echo "usage: ./deploy api|ui|we|all"
         exit 0
         ;;
 esac
