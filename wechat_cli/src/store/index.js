@@ -28,7 +28,8 @@ const actions = {
     return dispatch('getSeries', seriesId).then((series) => {
       let unfetchedLessonIds = lessonIds.filter((lid) => !state.lessons.has(lid))
       if (unfetchedLessonIds.length > 0) {
-        return Vue.axios.post(`/series/${seriesId}/search`, {lesson_ids: unfetchedLessonIds}).then((response) => {
+        let idstr = unfetchedLessonIds.join(',')
+        return Vue.axios.get(`/series/${seriesId}/search?lesson_ids=${idstr}`).then((response) => {
           let lessons = response.data
           lessons.forEach(v => commit('SET_LESSON', v))
         })

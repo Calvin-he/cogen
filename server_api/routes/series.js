@@ -28,10 +28,15 @@ router.get('/:id', (req, res, next) => {
     Series.findById(req.params.id).then(doc => res.send(doc)).catch(next);
 });
 
-router.post('/:id/search', (req,res, next) => {
+router.get('/:id/search', (req,res, next) => {
     var seriesId = req.params.id;
-    var fields = only(req.body, 'lesson_ids');
-    var lessonIds = fields.lesson_ids;
+    var lessonIds = req.query.lesson_ids
+    if(!lessonIds) {
+      res.send([])
+      return;
+    }
+    lessonIds = lessonIds.split(',');
+
     Series.findById(seriesId).then(seriesDoc => {
       Lesson.find({_id : {$in: lessonIds}}, '_id, title mediaPath').then(lessons => {
           let newLessons = lessons.map((les) => {
@@ -44,6 +49,5 @@ router.post('/:id/search', (req,res, next) => {
       }).catch(next);
     });
 })
-
 
 module.exports = router;
