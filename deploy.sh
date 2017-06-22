@@ -1,6 +1,6 @@
 
-deploy_api() {
-    rsync -av --delete --exclude=node_modules --exclude=public server_api/ dev@air:/home/www/ce/code/
+deploy_api(){
+    rsync -av --delete --exclude-from=.gitignore --exclude=public server_api/ dev@air:/home/www/ce/code/
 }
 
 deploy_ui(){
