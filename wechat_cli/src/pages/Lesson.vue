@@ -5,7 +5,7 @@
         <a class="nav-item" @click="$router.go(-1)"><i class="fa fa-arrow-left"></i></a>
       </div>
       <div class="nav-center">
-        <router-link class="nav-item" :to="{name: 'SeriesIntro', params: {seriesId: series._id}}" replace>
+        <router-link class="nav-item is-bold" :to="{name: 'SeriesIntro', params: {seriesId: seriesId}}" replace>
           {{series.title}}
         </router-link>
       </div>

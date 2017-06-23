@@ -6,7 +6,8 @@ Vue.use(Vuex)
 const state = {
   user: {},
   series: {},
-  lessons: new Map()
+  lessons: new Map(),
+  appId: null
 }
 
 const actions = {
@@ -51,6 +52,17 @@ const actions = {
         })
       }
     })
+  },
+
+  getAppId ({dispatch, state}) {
+    if (state.appId != null) {
+      return Promise.resolve(state.appId)
+    } else {
+      return Vue.axios.get('/info').then(res => {
+        state.appId = res.data.appId
+        return state.appId
+      })
+    }
   }
 }
 

@@ -78,9 +78,11 @@ export default {
     loginWechat () {
       let from = this.$auth.redirect().from
       if (from.query.code == null) {
-        let fullPath = encodeURIComponent(location.protocol + '//' + location.hostname + from.fullPath)
-        let wechatUrl = `https://open.weixin.qq.com/connect/oauth2/authorize?appid=${AppId}&redirect_uri=${fullPath}&response_type=code&scope=snsapi_base&state=Rzyyxx#wechat_redirect`
-        window.location.href = wechatUrl
+        this.$store.dispatch('getAppId').then((appId) => {
+          let fullPath = encodeURIComponent(location.protocol + '//' + location.hostname + from.fullPath)
+          let wechatUrl = `https://open.weixin.qq.com/connect/oauth2/authorize?appid=${appId}&redirect_uri=${fullPath}&response_type=code&scope=snsapi_base&state=Rzyyxx#wechat_redirect`
+          window.location.href = wechatUrl
+        })
       } else {
         this.$auth.login({
           params: { code: from.query.code, state: from.query.state, origin: 'wechat', appid: AppId },

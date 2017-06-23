@@ -5,7 +5,9 @@
         <div class="nav-item">&nbsp;&nbsp;</div>
       </div>
       <div class="nav-center">
-        <router-link class="nav-item" :to="{name: 'SeriesIntro', params: {seriesId: series._id}}" replace>{{series.title}}</router-link>
+        <router-link class="nav-item is-bold" :to="{name: 'SeriesIntro', params: {seriesId: seriesId}}" replace>
+          {{series.title}}
+        </router-link>
       </div>
       <div class="nav-right">
         <div class="nav-item">&nbsp;&nbsp;</div>
@@ -35,7 +37,7 @@
         <span slot="no-more">全部加载完毕</span>
       </infinite-loading>
     </div>
-    <audio ref="myaudio" src=""></audio>
+    <audio src=""></audio>
   </div>
 </template>
 
@@ -62,7 +64,7 @@ export default {
 
   },
   mounted () {
-    this.audio = this.refs.myaudio
+    this.audio = this.$el.getElementsByTagName('audio')[0]
   },
   methods: {
     onInfinite () {
@@ -109,8 +111,16 @@ export default {
         this.audio.src = ''
       }
     }
-
   },
+  beforeRouteLeave (to, from, next) {
+    if (this.currentPlayingLesson != null) {
+      this.currentPlayingLesson = null
+      this.audio.pause()
+      this.audio.src = ''
+    }
+    next()
+  },
+
   components: {
     InfiniteLoading
   }
@@ -127,7 +137,4 @@ export default {
   align-items: center;
 }
 
-.media+.media {
-  padding-top: 0;
-}
 </style>

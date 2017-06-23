@@ -4,7 +4,7 @@ var config = require('../config/config')
 var wechat = require('wechat')
 
 var config = {
-  appid: config.appid,
+  appid: config.appId,
   token: config.token,
   encodingAESKey: config.encodingAESKey,
   checkSignature: true 

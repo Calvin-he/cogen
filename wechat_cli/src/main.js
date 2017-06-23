@@ -23,12 +23,10 @@ Vue.router = router
 Vue.use(VueAuth, {
   auth: {
     request: function (req, token) {
-      console.log(req)
       req.headers.authorization = token
       // this.options.http._setHeaders.call(this, req, {Authorization: token})
     },
     response: function (res) {
-      console.log(res)
       // Get Token from response body
       // var token = this.options._getHeaders.call(this, res).Authorization
       let token = res.data.token

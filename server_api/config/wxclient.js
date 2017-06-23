@@ -5,7 +5,7 @@ var OAuth = require('wechat-oauth');
 var Config = require('./config')
 
 
-var client = new OAuth(Config.appid, Config.secret, function (openid, callback) {
+var client = new OAuth(Config.appId, Config.secret, function (openid, callback) {
 
     // 传入一个根据openid获取对应的全局token的方法
     //   // 在getUser时会通过该方法来获取token
