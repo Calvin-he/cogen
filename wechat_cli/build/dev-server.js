@@ -64,13 +64,13 @@ app.use(hotMiddleware)
 var staticPath = path.posix.join(config.dev.assetsPublicPath, config.dev.assetsSubDirectory)
 app.use(staticPath, express.static('./static'))
 
-var uri = 'http://0.0.0.0:' + port
+var uri = 'http://localhost:' + port
 
 devMiddleware.waitUntilValid(function () {
   console.log('> Listening at ' + uri + '\n')
 })
 
-module.exports = app.listen(port, '0.0.0.0', function (err) {
+module.exports = app.listen(port, 'localhost', function (err) {
   if (err) {
     console.log(err)
     return

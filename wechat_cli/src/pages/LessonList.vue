@@ -1,23 +1,23 @@
 <template>
   <div class="container">
     <header class="nav">
-       <div class="nav-left">
-         <div class="nav-item">&nbsp;&nbsp;</div>
-       </div>
+      <div class="nav-left">
+        <div class="nav-item">&nbsp;&nbsp;</div>
+      </div>
       <div class="nav-center">
         <router-link class="nav-item" :to="{name: 'SeriesIntro', params: {seriesId: series._id}}" replace>{{series.title}}</router-link>
       </div>
-       <div class="nav-right">
-         <div class="nav-item">&nbsp;&nbsp;</div>
-       </div>
+      <div class="nav-right">
+        <div class="nav-item">&nbsp;&nbsp;</div>
+      </div>
     </header>
     <div class="section">
-      <div class="media" v-for="lesson in lessonList">
+      <div class="media" v-for="lesson in lessonList" v-bind:key="lesson._id">
         <div class="media-left">
           <a class="button is-primary is-outlined" @click.prevent="play(lesson)">
             <span class="icon">
               <i class="fa fa-lock" v-if="!lesson.mediaPath"></i>
-              <i class="fa fa-pause" v-else-if="lesson === currentPlayingLesson">
+              <i class="fa fa-pause" v-else-if="lesson === currentPlayingLesson"></i>
               <i class="fa fa-play" v-else></i>
             </span>
           </a>
@@ -124,10 +124,10 @@ export default {
 }
 
 .media {
-  align-items: center; 
-}
-.media + .media {
-  padding-top: 0;
+  align-items: center;
 }
 
+.media+.media {
+  padding-top: 0;
+}
 </style>

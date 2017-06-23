@@ -86,7 +86,7 @@ connectDB()
     .once('open', listen)
 
 function listen(){
-    app.listen(config.port, '0.0.0.0', function () {
+    app.listen(config.port, '127.0.0.1', function () {
         console.log(`App listening on port ${config.port}!`)
     })
 }
