@@ -4,7 +4,7 @@
 </template>
 
 <script>
-const AppId = 'wx4e3854267f1d0628'
+const AppId = 'wx102d66d53d18931f'
 
 export default {
   mounted () {

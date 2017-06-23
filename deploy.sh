@@ -8,13 +8,15 @@ deploy_ui(){
     npm install
     npm run build
     rsync -av --delete --exclude=**/*.map dist/ dev@air:/home/www/ce/code/public/admin/
+    cd ..
 }
 
 deploy_we(){
     cd wechat_cli
     npm install
     npm run build
-    rsync -av -delete --exclude=**/*.map dist/ dev@air:/home/www/ce/code/public/wechat/
+    rsync -av --delete --exclude=**/*.map dist/ dev@air:/home/www/ce/code/public/wechat/
+    cd ..
 }
 
 case $1 in

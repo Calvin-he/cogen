@@ -9,6 +9,9 @@ Vue.use(Router)
 
 const router = new Router({
   routes: [{
+    path: '/',
+    redirect: { name: 'SeriesIntro', params: {seriesId: '594b70a343d23e487197050b'} }
+  }, {
     name: 'Login',
     path: '/login',
     component: Login
