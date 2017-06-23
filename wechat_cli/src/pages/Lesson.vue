@@ -18,7 +18,7 @@
       <h4 class="title">{{lesson.title}}</h4>
       <div>
         <span class="publish-date">2017-06-03</span>
-        <a class="public-account">公众号</a>
+        <a class="public-account">何老师认知英语</a>
       </div>
       <audio-player :audio-url="lesson.mediaPath" class="audio-player"></audio-player>
       <article class="content" v-html="lesson.content">

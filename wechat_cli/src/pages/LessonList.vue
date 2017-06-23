@@ -24,10 +24,10 @@
             </span>
           </a>
         </div>
-        <div class="media-content" @click.stop="gotoLesson(lesson._id)">
+        <div class="media-content" @click.stop="gotoLesson(lesson)">
           <h4 class="subtitle is-6">{{lesson.title}}</h4>
         </div>
-        <div class="media-right" @click.stop="gotoLesson(lesson._id)">
+        <div class="media-right" @click.stop="gotoLesson(lesson)">
           <span class=" icon ">
             <i class="fa fa-angle-right "></i>
           </span>
@@ -94,8 +94,10 @@ export default {
       }
     },
 
-    gotoLesson (lessonId) {
-      this.$router.push({ name: 'Lesson', params: { lessonId: lessonId, seriesId: this.series._id } })
+    gotoLesson (lesson) {
+      if (lesson.mediaPath) {
+        this.$router.push({ name: 'Lesson', params: { lessonId: lesson._id, seriesId: this.series._id } })
+      }
     },
 
     play (lesson) {
