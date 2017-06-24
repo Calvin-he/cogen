@@ -1,18 +1,6 @@
 <template>
   <div class="container">
-    <header class="nav">
-      <div class="nav-left">
-        <div class="nav-item">&nbsp;&nbsp;</div>
-      </div>
-      <div class="nav-center">
-        <router-link class="nav-item is-bold" :to="{name: 'SeriesIntro', params: {seriesId: seriesId}}" replace>
-          {{series.title}}
-        </router-link>
-      </div>
-      <div class="nav-right">
-        <div class="nav-item">&nbsp;&nbsp;</div>
-      </div>
-    </header>
+    <cogen-header :series-id="seriesId" :seriesTitle="series.title"></cogen-header>
     <div class="section">
       <div class="media" v-for="lesson in lessonList" v-bind:key="lesson._id">
         <div class="media-left">
@@ -43,6 +31,7 @@
 
 <script>
 import InfiniteLoading from 'vue-infinite-loading'
+import CogenHeader from '../components/CogenHeader'
 
 export default {
   name: 'LessonList',
@@ -124,7 +113,8 @@ export default {
   },
 
   components: {
-    InfiniteLoading
+    InfiniteLoading,
+    CogenHeader
   }
 }
 </script>

@@ -1,19 +1,21 @@
 <template>
   <div class="container">
+    <cogen-header :series-id="seriesId" :seriesTitle="series.title"></cogen-header>
     <figure class="image is-2by1">
       <img :src="series.bannerUrl">
     </figure>
   
-    <section class="section">
-      <h4 class="subtitle is-4">{{series.title}}</h4>
+    <div class="section">
+      <h4 class="title is-4">{{series.title}}</h4>
       <p class="content">{{series.desc}}
       </p>
-    </section>
-    <section class="section">
-      <h4 class="subtitle is-4">购买须知</h4>
+    </div>
+    <hr style="margin: 0">
+    <div class="section">
+      <h4 class="title is-4">购买须知</h4>
       <p class="content">。。。。
       </p>
-    </section>
+    </div>
   
     <div class="footer">
       <div class="columns is-mobile" v-if="!isPaid()">
@@ -34,6 +36,8 @@
 </template>
 
 <script>
+import CogenHeader from '../components/CogenHeader'
+
 export default {
   name: 'SeriesIntro',
   props: {
@@ -78,6 +82,10 @@ export default {
       let series = (user.series || []).find(v => v.seriesId === this.seriesId)
       return series != null
     }
+  },
+
+  components: {
+    CogenHeader
   }
 }
 </script>

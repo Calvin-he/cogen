@@ -1,19 +1,8 @@
 <template>
   <div class="container">
-    <header class="nav">
-      <div class="nav-left">
-        <a class="nav-item" @click="$router.go(-1)"><i class="fa fa-arrow-left"></i></a>
-      </div>
-      <div class="nav-center">
-        <router-link class="nav-item is-bold" :to="{name: 'SeriesIntro', params: {seriesId: seriesId}}" replace>
-          {{series.title}}
-        </router-link>
-      </div>
-      <div class="nav-right">
-        <div class="nav-item">&nbsp;&nbsp;&nbsp;</div>
-      </div>
-    </header>
-  
+    <cogen-header :series-id="seriesId" :seriesTitle="series.title">
+      <router-link slot="left" :to="{name: 'LessonList', params: {seriesId: seriesId}}" replace>返回</router-link>
+    </cogen-header>
     <div class="section">
       <h4 class="title">{{lesson.title}}</h4>
       <div>
@@ -31,18 +20,19 @@
 
 <script>
 import AudioPlayer from '../components/AudioPlayer'
+import CogenHeader from '../components/CogenHeader'
 
 export default {
   name: 'Lesson',
   props: {
-    seriesId: {type: String, required: true},
-    lessonId: {type: String, required: true}
+    seriesId: { type: String, required: true },
+    lessonId: { type: String, required: true }
   },
 
   data () {
     return {
       series: {},
-      lesson: {mediaPath: ''}
+      lesson: { mediaPath: '' }
     }
   },
   watch: {
@@ -61,7 +51,8 @@ export default {
     })
   },
   components: {
-    AudioPlayer
+    AudioPlayer,
+    CogenHeader
   }
 }
 </script>
@@ -70,6 +61,7 @@ export default {
 .full-width {
   width: 100%
 }
+
 .audio-player {
   margin-top: 10px;
   margin-bottom: 10px;
