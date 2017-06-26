@@ -49,7 +49,7 @@ app.use('api/1.0/info', require('./routes/cogen'))
 app.use('/api/1.0/auth', require('./routes/auth'))
 
 apiApp = express();
-apiApp.use(require('./config/auth'))
+apiApp.use(require('./config/auth').authRequest)
 apiApp.use('/lessons', require('./routes/lessons'));
 apiApp.use('/media', require('./routes/media'));
 apiApp.use('/series', require('./routes/series'));
@@ -87,7 +87,7 @@ connectDB()
     .once('open', listen)
 
 function listen(){
-    app.listen(config.port, '127.0.0.1', function () {
+    app.listen(config.port, '0.0.0.0', function () {
         console.log(`App listening on port ${config.port}!`)
     })
 }

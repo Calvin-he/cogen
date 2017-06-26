@@ -1,37 +1,32 @@
 var basicAuth0 = require( 'basic-auth' );
 var config = require( './config' );
 var wxclient = require( './wxclient' );
+var jwt = require( 'jsonwebtoken' );
 
-var basicAuth = function( req, response, next ) {
+var exports = {}
 
-  function unauthorized( response ) {
-    response.set( 'WWW-Authenticate', 'Basic realm=Authorization Required' );
-    return response.sendStatus( 401 );
-  };
-  var user = basicAuth0( req );
-
-  if ( !user || !user.name || !user.pass ) {
-    return unauthorized( response );
-  };
-
-  if ( user.name === config.username && user.pass === config.password ) {
-    req.user.isAdmin = true;
-    return next();
+exports.authRequest = function( req, res, next ) {
+  var token = req.header( 'Authorization' );
+  if ( token ) {
+    jwt.verify( token, config.jwtsecret, function( err, decoded ) {
+      if ( !err ) {
+        req.user = decoded; //{username, isAdmin}
+        next()
+      } else {
+        res.sendStatus( 401 );
+      }
+    } );
   } else {
-    return unauthorized( response );
-  };
-
-};
-
-module.exports = function( req, res, next ) {
-  var userId = req.header( 'Authorization' );
-  if ( userId ) {
-    var isAdmin = userId === config.username
-    req.user = { isAdmin: isAdmin, id: userId };
-    next();
-  } else {
-    //res.redirect(wxclient.authorizeURL);
-    //basicAuth(req, res, next)
     res.sendStatus( 401 );
   }
 }
+
+exports.getToken = function( user ) {
+  let token = jwt.sign( {
+    username: user.username,
+    isAdmin: !!user.isAdmin
+  }, config.jwtsecret, { expiresIn: '10h' } );
+  return token
+}
+
+module.exports = exports

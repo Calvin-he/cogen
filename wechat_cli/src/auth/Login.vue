@@ -85,7 +85,7 @@ export default {
         })
       } else {
         this.$auth.login({
-          params: { code: from.query.code, state: from.query.state, origin: 'wechat', appid: AppId },
+          data: { code: from.query.code, state: from.query.state, origin: 'wechat', appid: AppId },
           rememberMe: true,
           redirect: { name: from.name },
           success (res) {
@@ -112,7 +112,7 @@ export default {
       let redirectPath = this.$auth.redirect() ? this.$auth.redirect().from.fullPath : '/'
       this.logging = true
       this.$auth.login({
-        params: { username: this.username, password: this.password, origin: 'cogen', appid: AppId },
+        data: { username: this.username, password: this.password, origin: 'cogen', appid: AppId },
         rememberMe: this.rememberMe,
         redirect: { path: redirectPath },
         success (res) {

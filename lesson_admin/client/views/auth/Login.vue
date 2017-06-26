@@ -60,7 +60,7 @@ export default {
     login () {
       var redirect = this.$auth.redirect()
       this.$auth.login({
-        params: {username: this.data.body.username, password: this.data.body.password, origin: 'cogen'},
+        body: {username: this.data.body.username, password: this.data.body.password, origin: 'cogen'},
         rememberMe: this.data.rememberMe,
         redirect: {name: redirect ? redirect.from.name : 'Home'},
         success (res) {

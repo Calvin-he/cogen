@@ -6,6 +6,7 @@ var Config = {
   uploadDir: 'uploads',
   username: 'admin',
   password: '111111',
+  jwtsecret: '3t2424r23466y4f444rrt3444fu',
   /* wechat config: appid secret token encodingAESKey*/
   appId: 'wx4e3854267f1d0628',
   secret: '',
