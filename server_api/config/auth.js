@@ -21,11 +21,15 @@ exports.authRequest = function( req, res, next ) {
   }
 }
 
-exports.getToken = function( user ) {
+/**
+ * @param expiredDate Seconds Since the Epoch 
+ */
+exports.getToken = function( user, expiredDate ) {
   let token = jwt.sign( {
     username: user.username,
-    isAdmin: !!user.isAdmin
-  }, config.jwtsecret, { expiresIn: '10h' } );
+    isAdmin: !!user.isAdmin,
+    exp: expiredDate
+  }, config.jwtsecret);
   return token
 }
 

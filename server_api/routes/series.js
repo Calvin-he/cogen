@@ -10,12 +10,12 @@ router.get('/', (req, res, next) => {
 });
 
 router.post('/', (req, res, next) => {
-  var series = new Series(only(req.body, 'title desc bannerId lessonList freeLessons'));
+  var series = new Series(only(req.body, 'title desc price noticeForPurchase bannerId lessonList freeLessons'));
   series.save().then((doc) => res.send(doc)).catch(next);
 });
 
 router.put('/:id', (req, res, next) => {
-  var fields = only(req.body, 'title desc bannerId lessonList freeLessons');
+  var fields = only(req.body, 'title desc price noticeForPurchase bannerId lessonList freeLessons');
   fields.updated = Date.now()
   Series.findByIdAndUpdate(req.params.id, fields, {new: true}).then((doc) => res.send(doc)).catch(next);
 });

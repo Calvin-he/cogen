@@ -69,6 +69,8 @@ export default {
       newSeries: {
         title: null,
         desc: null,
+        price: null,
+        noticeForPurchase: null,
         bannerId: null,
         lessonList: [],
         freeLessons: []

@@ -6,9 +6,11 @@ var auth = require( '../config/auth' );
 
 router.post( '/', ( req, res, next ) => {
   User.authenticate( req.body ).then( user => {
-    let token = auth.getToken( user );
+    let expired =  Math.floor(Date.now() / 1000) + (24 * 60 * 60); // Seconds Since the Epoch
+    let token = auth.getToken( user, expired );
     res.send( {
       token: token,
+      expired: expired,
       user: user
     } )
   } ).catch( e => {

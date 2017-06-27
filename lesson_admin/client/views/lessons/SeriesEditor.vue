@@ -1,29 +1,38 @@
 <template>
   <loading :loading="isloading">
     <div class="columns">
-      <div class="column is-one-third">
+      <div class="column is-half">
         <div class="box">
-        <p class="control">
-          <input class="input" type="text" v-model.trim="ctrl_title.value" placeholder="课程系列标题" @blur="validateTitle">
-          <span class="help is-danger" v-show="ctrl_title.errors.required">课程名称不能为空</span>
-        </p>
-        <p class="control">
-          <textarea v-model.trim="ctrl_desc.value" class="textarea" placeholder="简要描述"></textarea>
-        </p>
-      </div>
+          <p class="control">
+            <input class="input" type="text" v-model.trim="ctrl_title.value" placeholder="课程系列标题" @blur="validateTitle">
+            <span class="help is-danger" v-show="ctrl_title.errors.required">价格不能为空</span>
+          </p>
+          <p class="control">
+            <textarea v-model.trim="ctrl_desc.value" class="textarea" placeholder="简要描述"></textarea>
+          </p>
+        </div>
       </div>
       <div class="column">
         <div class="box">
-        <p class="control">
-          <select-media v-model="ctrl_bannerId.value" @change="setBannerPath" placeholder="请选择插图" 
-              extensions="png|jpg|gif" accept="image/png, image/jpeg, image/gif"></select-media>
-          <figure class="image is-128x128">
-            <img v-show="ctrl_bannerId.bannerPath" :src="ctrl_bannerId.bannerPath">
-          </figure>
-          <span class="help is-danger" v-show="ctrl_bannerId.errors.required">必须有插图</span>
-        </p>
+          <p class="control has-icon">      
+            <input class="input" type="number" v-model="ctrl_price.value" placeholder="购买价格" @blur="validatePrice">
+            <span class="icon"><i class="fa fa-jpy"></i></span>
+            <span class="help is-danger" v-show="ctrl_price.errors.required">课程名称不能为空</span>
+          </p>
+          <p class="control">
+            <textarea v-model.trim="ctrl_noticeForPurchase.value" class="textarea" placeholder="购买须知"></textarea>
+          </p>
         </div>
       </div>
+    </div>
+    <div class="box">
+      <p class="control">
+        <select-media v-model="ctrl_bannerId.value" @change="setBannerPath" placeholder="请选择插图" extensions="png|jpg|gif" accept="image/png, image/jpeg, image/gif"></select-media>
+        <figure class="image is-128x128">
+          <img v-show="ctrl_bannerId.bannerPath" :src="ctrl_bannerId.bannerPath">
+        </figure>
+        <span class="help is-danger" v-show="ctrl_bannerId.errors.required">必须有插图</span>
+      </p>
     </div>
   
     <div class="columns">
@@ -34,8 +43,8 @@
             <transition-group class="draggable-container">
               <div v-for="element in ctrl_lessonList.value" :key="element._id" class="draggable-item">
                 {{element.title}}
-                <label class="checkbox is-pulled-right"><input type="checkbox" 
-                  v-model="ctrl_freeLessons.value[element._id]">试读</label>
+                <label class="checkbox is-pulled-right">
+                  <input type="checkbox" v-model="ctrl_freeLessons.value[element._id]">试读</label>
               </div>
             </transition-group>
           </draggable>
@@ -80,9 +89,11 @@ export default {
       isloading: false,
       ctrl_title: { value: null, errors: {} },
       ctrl_desc: { value: null, errors: {} },
+      ctrl_price: { value: null, errors: {} },
       ctrl_bannerId: { value: null, bannerPath: null, errors: {} },
       ctrl_lessonList: { unselected: [], value: [], errors: {} },
-      ctrl_freeLessons: {value: {}, errors: {}}
+      ctrl_freeLessons: { value: {}, errors: {} },
+      ctrl_noticeForPurchase: { value: null, errors: {} }
     }
   },
   mounted () {
@@ -95,6 +106,10 @@ export default {
     validateTitle () {
       this.$set(this.ctrl_title.errors, 'required', this.isEmptyString(this.ctrl_title.value))
       return !this.ctrl_title.errors.required
+    },
+    validatePrice () {
+      this.$set(this.ctrl_price.errors, 'required', this.isEmptyString(this.ctrl_price.value))
+      return !this.ctrl_price.errors.required
     },
     validateBanner () {
       this.$set(this.ctrl_bannerId.errors, 'required', this.isEmptyString(this.ctrl_bannerId.value))
@@ -124,6 +139,12 @@ export default {
       }
       this.ctrl_desc = {
         value: this.series.desc, errors: {}
+      }
+      this.ctrl_price = {
+        value: this.series.price, errors: {}
+      }
+      this.ctrl_noticeForPurchase = {
+        value: this.series.noticeForPurchase, errors: {}
       }
       this.ctrl_bannerId = {
         value: this.series.bannerId, errors: {}
@@ -155,6 +176,7 @@ export default {
     submit () {
       let valid = this.validateTitle()
       valid = this.validateBanner() && valid
+      valid = this.validatePrice() && valid
       if (!valid) {
         return false
       }
@@ -164,6 +186,8 @@ export default {
         let data = {
           title: this.ctrl_title.value,
           desc: this.ctrl_desc.value,
+          price: this.ctrl_price.value,
+          noticeForPurchase: this.ctrl_noticeForPurchase.value,
           bannerId: this.ctrl_bannerId.value,
           lessonList: selectedLessonIds,
           freeLessons: freeLessonIds
@@ -181,6 +205,12 @@ export default {
         }
         if (this.ctrl_desc.value !== this.series.desc) {
           data.desc = this.ctrl_desc.value
+        }
+        if (this.ctrl_price.value !== this.series.price) {
+          data.price = this.ctrl_price.value
+        }
+        if (this.ctrl_noticeForPurchase.value !== this.series.noticeForPurchase) {
+          data.noticeForPurchase = this.ctrl_noticeForPurchase.value
         }
         if (this.ctrl_bannerId.value !== this.series.bannerId) {
           data.bannerId = this.ctr_bannerId.value
@@ -213,7 +243,7 @@ export default {
     },
 
     isEmptyString (v) {
-      return v === null || v.trim().length === 0
+      return v == null || v.trim().length === 0
     },
 
     onChangeLessonList (operation) {
@@ -231,6 +261,7 @@ export default {
   }
 }
 </script>
+
 <style lang="scss" scoped>
 @import "~quill/dist/quill.snow.css";
 @import "~bulma/sass/utilities/variables";
