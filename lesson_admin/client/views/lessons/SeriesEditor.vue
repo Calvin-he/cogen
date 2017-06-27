@@ -65,7 +65,8 @@
       </div>
     </div>
     <p class="control">
-      <button class="button is-primary" @click="submit">提交</button>
+      <button type="submit" class="button is-primary" style="left: 45%" @click="submit">提交</button>
+      <button type="button" class="button is-danger pull-right" @click="deleteSeries" v-if="series._id">删除</button>
     </p>
   </loading>
 </template>
@@ -229,6 +230,15 @@ export default {
             this.isloading = false
           })
         }
+      }
+    },
+
+    deleteSeries () {
+      if (this.series._id) {
+        this.isloading = true
+        this.$store.dispatch('deleteSeries', this.series).then(result => {
+          this.isloading = false
+        })
       }
     },
 

@@ -19,6 +19,10 @@ const actions = {
     return Vue.axios.put('/lessons/' + lesson._id, lesson).then((response) => commit('UPDATELESSON', response.data))
   },
 
+  deleteLesson ({commit}, lesson) {
+    // TODO
+  },
+
   listSeries ({ commit }) {
     return Vue.axios.get('/series').then((response) => commit('LISTOFSERIES', response.data))
   },
@@ -32,6 +36,13 @@ const actions = {
     return Vue.axios.put('/series/' + series._id, series).then((response) => {
       commit('UPDATESERIES', response.data)
       return response.data
+    })
+  },
+
+  deleteSeries ({commit}, series) {
+    return Vue.axios.delete('/series/' + series._id).then(response => {
+      commit('DELETESERIES', series)
+      return true
     })
   },
 
@@ -90,6 +101,9 @@ const mutations = {
       }
     }
     return found
+  },
+  DELETESERIES (state, series) {
+    state.seriesList = state.seriesList.filter(v => v._id !== series._id)
   },
 
   LISTOFMEDIA (state, mediaList) {

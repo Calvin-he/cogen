@@ -19,8 +19,9 @@
       <v-select :options="seriesList" label="title"  multiple></v-select>
     </p-->
   
-    <p class="control">
-      <button type="submit" class="button is-primary" @click="submit">提交</button>
+    <p class="control ">
+      <button type="submit" class="button is-primary" style="left: 45%" @click="submit">提交</button>
+      <button type="button" class="button is-danger pull-right" v-if="lesson._id" @click="deleteLesson">删除</button>
     </p>
   </loading>
 </template>
@@ -127,6 +128,10 @@ export default {
         value: this.lesson.content,
         errors: {}
       }
+    },
+
+    deleteLesson () {
+
     },
 
     isEmptyString (v) {
