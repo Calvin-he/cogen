@@ -4,7 +4,6 @@ import Vuex from 'vuex'
 Vue.use(Vuex)
 
 const state = {
-  user: {},
   series: {},
   lessons: new Map(),
   appId: null,
@@ -13,15 +12,15 @@ const state = {
 
 const actions = {
   getSeries ({ commit, state }, seriesId) {
-    if (state.series[ seriesId ]) {
-      return Promise.resolve(state.series[ seriesId ])
+    if (seriesId === state.series._id) {
+      return Promise.resolve(state.series)
     } else {
       return Vue.axios.get('/series/' + seriesId).then((response) => {
         let seriesObj = response.data
         return Vue.axios.get(`/media/${seriesObj.bannerId}`).then((response) => {
           seriesObj.bannerUrl = response.data.path
           commit('SET_SERIES', seriesObj)
-          return state.series[ seriesId ]
+          return state.series
         })
       })
     }
@@ -77,10 +76,7 @@ const actions = {
 // define the possible mutations that can be applied to our state
 const mutations = {
   SET_SERIES (state, series) {
-    Vue.set(state.series, series._id, series)
-  },
-  SET_USER (state, userData) {
-    state.user = userData
+    state.series = series
   },
   SET_LESSON (state, lesson) {
     state.lessons.set(lesson._id, lesson)

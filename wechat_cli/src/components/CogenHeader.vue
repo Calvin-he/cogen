@@ -14,7 +14,7 @@
     </div>
     <div class="nav-right">
       <div class="nav-item">
-       <slot  name="left"></slot>
+       <slot  name="right"></slot>
       </div>
     </div>
   </header>

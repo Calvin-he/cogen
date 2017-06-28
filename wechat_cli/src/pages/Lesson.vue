@@ -38,7 +38,7 @@ export default {
   watch: {
     lessonId (newV) {
       this.$store.dispatch('getLesson', { seriesId: this.seriesId, lessonId: this.lessonId }).then((lesson) => {
-        this.series = this.$store.state.series[this.seriesId]
+        this.series = this.$store.state.series
         this.lesson = lesson
       })
     }
@@ -46,7 +46,7 @@ export default {
 
   mounted () {
     this.$store.dispatch('getLesson', { seriesId: this.seriesId, lessonId: this.lessonId }).then((lesson) => {
-      this.series = this.$store.state.series[this.seriesId]
+      this.series = this.$store.state.series
       this.lesson = lesson
     })
   },
