@@ -74,7 +74,10 @@ export default {
     },
 
     gotoPayment () {
-      this.$router.push({name: 'payment', params: {series_id: this.series_id}})
+      if (this.$auth.user.isTemp) {
+      }
+      this.$store.dispatch('showMessage', {msg: '请先关注公众号！', level: 'warning'})
+      // this.$router.push({name: 'payment', params: {series_id: this.series_id}})
     },
 
     isPaid () {

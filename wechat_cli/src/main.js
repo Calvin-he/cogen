@@ -35,7 +35,7 @@ Vue.use(VueAuth, {
   },
   http: require('@websanova/vue-auth/drivers/http/axios.1.x.js'),
   router: require('@websanova/vue-auth/drivers/router/vue-router.2.x.js'),
-  loginData: { url: '/auth', method: 'POST', fetchUser: false },
+  loginData: { url: '/auth/login', method: 'POST', fetchUser: false },
   refreshData: { enabled: false }
 })
 
@@ -45,5 +45,21 @@ new Vue({
   router,
   store,
   template: '<App/>',
-  components: { App }
+  components: { App },
+
+  beforeMount () {
+    // Add a response interceptor
+    this.axios.interceptors.response.use(function (response) {
+      return response
+    }, (err) => {
+      if (err.response.status === 403) {
+        this.$auth.logout({
+          redirect: '/login',
+          makeRequest: false
+        })
+      } else {
+        return err
+      }
+    })
+  }
 })

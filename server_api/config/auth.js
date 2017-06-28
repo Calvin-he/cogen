@@ -13,21 +13,21 @@ exports.authRequest = function( req, res, next ) {
         req.user = decoded; //{username, isAdmin}
         next()
       } else {
-        res.sendStatus( 401 );
+        res.sendStatus( 403 );
       }
     } );
   } else {
-    res.sendStatus( 401 );
+    res.sendStatus( 403 );
   }
 }
 
 /**
  * @param expiredDate Seconds Since the Epoch 
  */
-exports.getToken = function( user, expiredDate ) {
+exports.getToken = function( {username, isAdmin}, expiredDate ) {
   let token = jwt.sign( {
-    username: user.username,
-    isAdmin: !!user.isAdmin,
+    username: username,
+    isAdmin: !!isAdmin,
     exp: expiredDate
   }, config.jwtsecret);
   return token

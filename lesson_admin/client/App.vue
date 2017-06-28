@@ -39,6 +39,22 @@ export default {
     document.addEventListener('visibilitychange', handler)
     window.addEventListener('DOMContentLoaded', handler)
     window.addEventListener('resize', handler)
+
+    // Add a response interceptor
+    this.axios.interceptors.response.use(function (response) {
+        // Do something with response data
+      return response
+    }, (err) => {
+      // Do something with response error
+      if (err.response.status === 403) {
+        this.$auth.logout({
+          redirect: '/login',
+          makeRequest: false
+        })
+      } else {
+        return err
+      }
+    })
   },
 
   computed: mapGetters({

@@ -7,7 +7,8 @@ const state = {
   user: {},
   series: {},
   lessons: new Map(),
-  appId: null
+  appId: null,
+  messageEvent: null
 }
 
 const actions = {
@@ -54,6 +55,13 @@ const actions = {
     })
   },
 
+  showMessage ({commit}, {msg, level}) {
+    commit('SET_MESSAGE_EVENT', {msg, level})
+    setTimeout(() => {
+      commit('SET_MESSAGE_EVENT', null)
+    }, 1500)
+  },
+
   getAppId ({dispatch, state}) {
     if (state.appId != null) {
       return Promise.resolve(state.appId)
@@ -76,7 +84,11 @@ const mutations = {
   },
   SET_LESSON (state, lesson) {
     state.lessons.set(lesson._id, lesson)
+  },
+  SET_MESSAGE_EVENT (state, obj) {
+    state.messageEvent = obj
   }
+
 }
 
 export default new Vuex.Store({
