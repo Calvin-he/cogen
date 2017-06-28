@@ -5,6 +5,9 @@ var only = require('only');
 var Lesson = mongoose.model('Lesson');
 var Media = mongoose.model('Media');
 
+var authUtils = require('../config/auth');
+router.use(authUtils.authRequest)
+
 /* GET users listing. */
 router.get('/', (req, res, next) => {
     Lesson.list().then(lessons => {

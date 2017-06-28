@@ -43,18 +43,15 @@ app.use(function(req, res, next) {
    }
 });
 
-
-app.use('/wechat', require('./routes/wechat'))
-app.use('api/1.0/info', require('./routes/cogen'))
-app.use('/api/1.0/auth', require('./routes/auth'))
+app.use('/wechat', require('./routes/wechat'));
+app.use('api/1.0/info', require('./routes/cogen'));
+app.use('/api/1.0/auth', require('./routes/auth'));
 
 apiApp = express();
-apiApp.use(require('./config/auth').authRequest)
 apiApp.use('/lessons', require('./routes/lessons'));
 apiApp.use('/media', require('./routes/media'));
 apiApp.use('/series', require('./routes/series'));
 app.use('/api/1.0', apiApp);
-
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
