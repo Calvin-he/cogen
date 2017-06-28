@@ -71,8 +71,9 @@ export default {
   },
   methods: {
     isWechatBrowser () {
-      let ua = navigator.userAgent.toLowerCase()
-      return (/micromessenger/.test(ua))
+      // let ua = navigator.userAgent.toLowerCase()
+      // return (/micromessenger/.test(ua))
+      return false
     },
 
     loginWechat () {

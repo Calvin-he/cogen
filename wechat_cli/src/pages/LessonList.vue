@@ -80,12 +80,16 @@ export default {
             this.$refs.infiniteLoading.$emit('$InfiniteLoading:complete')
           }
         })
+      } else {
+        this.$refs.infiniteLoading.$emit('$InfiniteLoading:complete')
       }
     },
 
     gotoLesson (lesson) {
       if (lesson.mediaPath) {
         this.$router.push({ name: 'Lesson', params: { lessonId: lesson._id, seriesId: this.series._id } })
+      } else {
+        this.$store.dispatch('showMessage', {msg: 'Sorry, 购买后才能查看。', level: 'warning'})
       }
     },
 
