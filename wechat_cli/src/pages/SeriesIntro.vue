@@ -1,7 +1,7 @@
 <template>
   <div class="container">
     <cogen-header :series-id="seriesId" :seriesTitle="series.title"></cogen-header>
-    <figure class="image is-2by1">
+    <figure class="image">
       <img :src="series.bannerUrl">
     </figure>
   
