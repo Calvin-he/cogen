@@ -109,7 +109,7 @@ export default {
       return !this.ctrl_title.errors.required
     },
     validatePrice () {
-      this.$set(this.ctrl_price.errors, 'required', this.isEmptyString(this.ctrl_price.value))
+      this.$set(this.ctrl_price.errors, 'required', !this.ctrl_price.value)
       return !this.ctrl_price.errors.required
     },
     validateBanner () {
