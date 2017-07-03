@@ -7,14 +7,15 @@
   
     <div class="section">
       <h4 class="title is-4">{{series.title}}</h4>
-      <p class="content">{{series.desc}}
-      </p>
+      <p v-html="series.desc"></p>
     </div>
     <hr style="margin: 0">
     <div class="section">
-      <h4 class="title is-4">购买须知</h4>
-      <p class="content">。。。。
-      </p>
+      <div class="columns is-mobile">
+        <span class="column is-8"><h4 class="title is-4">购买须知</h4></span>
+        <span class="column is-4">价格: ￥{{series.price}}</span>
+      </div>
+      <p v-html="series.noticeForPurchase"></p>
     </div>
   
     <div class="footer">
@@ -23,7 +24,7 @@
           <a class=" button is-primary is-outlined" @click="gotoLessonList">试课</a>
         </div>
         <div class="column">
-          <a class="button is-primary" @click.stop.prevent="gotoPayment">付款</a>
+          <a class="button is-primary" @click.stop.prevent="gotoPayment">购买</a>
         </div>
       </div>
       <div class="columns is-mobile" v-else>
@@ -70,14 +71,16 @@ export default {
 
   methods: {
     gotoLessonList () {
-      this.$router.push({name: 'LessonList', params: {series_id: this.series._id}})
+      this.$router.push({name: 'LessonList', params: {seriesId: this.series._id}})
     },
 
     gotoPayment () {
       if (this.$auth.user.isTemp) {
+        this.$store.dispatch('showMessage', {msg: '请先关注公众号！', level: 'warning'})
+        return
+      } else {
+        this.$router.push({name: 'Payment', params: {seriesId: this.series._id}})
       }
-      this.$store.dispatch('showMessage', {msg: '请先关注公众号！', level: 'warning'})
-      // this.$router.push({name: 'payment', params: {series_id: this.series_id}})
     },
 
     isPaid () {

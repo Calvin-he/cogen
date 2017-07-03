@@ -3,6 +3,7 @@ import Router from 'vue-router'
 import LessonList from 'pages/LessonList'
 import Lesson from 'pages/Lesson'
 import SeriesIntro from 'pages/SeriesIntro'
+import Payment from 'pages/Payment'
 import Login from 'auth/Login'
 
 Vue.use(Router)
@@ -29,6 +30,12 @@ const router = new Router({
     path: '/seriesintro/:seriesId',
     meta: {auth: true},
     component: SeriesIntro,
+    props: true
+  }, {
+    name: 'Payment',
+    path: '/payment/:seriesId',
+    meta: {auth: true},
+    component: Payment,
     props: true
   }]
 })
