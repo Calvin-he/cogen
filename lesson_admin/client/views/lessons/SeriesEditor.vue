@@ -42,7 +42,7 @@
           <draggable v-model="ctrl_lessonList.value" :options="{group:'lessons'}" class="draggable" @change="onChangeLessonList">
             <transition-group class="draggable-container">
               <div v-for="element in ctrl_lessonList.value" :key="element._id" class="draggable-item">
-                {{element.title}}
+                <div class="is-pulled-left">{{element.title}}</div>
                 <label class="checkbox is-pulled-right">
                   <input type="checkbox" v-model="ctrl_freeLessons.value[element._id]">试读</label>
               </div>
@@ -284,6 +284,8 @@ export default {
 }
 
 .draggable-item {
+  width: 100%;
+  display: inline-block;
   $color: $primary !default;
   $color-invert: findColorInvert($color) !default;
   $button-shadow-inset: inset 0 1px 2px rgba($black, 0.2) !default;
