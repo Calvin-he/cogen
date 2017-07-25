@@ -5,9 +5,6 @@ var only = require('only');
 var Series = mongoose.model('Series');
 var Lesson = mongoose.model('Lesson');
 
-var authUtils = require('../config/auth');
-router.use(authUtils.authRequest)
-
 router.get('/', (req, res, next) => {
   Series.list().then(seriess => res.send(seriess)).catch(next);
 });

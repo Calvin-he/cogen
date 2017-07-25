@@ -6,6 +6,7 @@ var jwt = require( 'jsonwebtoken' );
 var exports = {}
 
 exports.authRequest = function( req, res, next ) {
+   // req.user = {username: 'admin'}; next();return;
   var token = req.header( 'Authorization' );
   if ( token ) {
     jwt.verify( token, config.jwtsecret, function( err, decoded ) {

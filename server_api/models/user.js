@@ -24,7 +24,8 @@ const UserSchema = new mongoose.Schema( {
   nickname: { type: String },
   hashed_password: { type: String },
   isAdmin: { type: Boolean },
-  created: { type: Date, default: Date.now }
+  created: { type: Date, default: Date.now },
+  votedComments: mongoose.Schema.Types.Mixed 
 } );
 
 const validatePresenceOf = value => value && value.length;
@@ -176,6 +177,12 @@ UserSchema.statics = {
       .select( options.select )
       .exec( cb );
   },
+
+    votesComment: function(username, lessonId, commentId){
+        var addToSet = {};
+        addToSet["votedComments." + lessonId] = commentId;
+        return User.update({username: username}, {$addToSet: addToSet})
+    }
 };
 
 var User = mongoose.model( 'User', UserSchema );

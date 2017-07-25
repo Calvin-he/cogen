@@ -8,6 +8,7 @@ var bodyParser = require('body-parser');
 var mongoose = require('mongoose');
 var config = require('./config/config');
 var fs = require('fs');
+var authUtils = require('./config/auth');
 
 var app = express();
 
@@ -44,13 +45,14 @@ app.use(function(req, res, next) {
 });
 
 app.use('/wechat', require('./routes/wechat'));
-app.use('api/1.0/info', require('./routes/cogen'));
+app.use('/api/1.0/info', require('./routes/cogen'));
 app.use('/api/1.0/auth', require('./routes/auth'));
 
 apiApp = express();
 apiApp.use('/lessons', require('./routes/lessons'));
 apiApp.use('/media', require('./routes/media'));
 apiApp.use('/series', require('./routes/series'));
+app.use(authUtils.authRequest)
 app.use('/api/1.0', apiApp);
 
 // catch 404 and forward to error handler
