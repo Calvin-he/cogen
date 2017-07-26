@@ -7,8 +7,8 @@
     </div>
     <div class="nav-center">
       <div class="nav-item">
-      <router-link class="is-bold is-info" :to="{name: 'SeriesIntro', params: {seriesId: seriesId}}" replace>
-        {{seriesTitle}}
+      <router-link class="is-bold is-info" :to="url" replace>
+        {{title}}
       </router-link>
       </div>
     </div>
@@ -24,8 +24,8 @@
 export default {
   name: 'CogenHeader',
   props: {
-    seriesId: String,
-    seriesTitle: String
+    url: String,
+    title: String
   }
 
 }

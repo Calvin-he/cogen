@@ -1,5 +1,8 @@
 <template>
 <div>
+  <cogen-header :url="seriesUrl" :title="series.title">
+    <a slot="left" @click="$router.go(-1)">返回</a>
+  </cogen-header>
   <div class="section">
     <h4 class="title is-4">个人信息</h4>
     <div class="columns is-mobile">
@@ -8,7 +11,7 @@
     </div>
     <div class="columns is-mobile">
       <div class="column is-4">昵称</div>
-      <div class="column"></div>
+      <div class="column">{{user.nickname || user.username}}</div>
     </div>
     <div class="columns is-mobile">
       <div class="column is-4">性别</div>
@@ -24,21 +27,30 @@
     <h4 class="title is-4">商品信息</h4>
     <div class="columns is-mobile">
       <div class="column is-4">名称</div>
-      <div class="column"></div>
+      <div class="column">{{series.title}}</div>
     </div>
     <div class="columns is-mobile">
       <div class="column is-4">价格</div>
-      <div class="column"></div>
+      <div class="column">￥{{series.price}}</div>
     </div>
         <div class="columns is-mobile">
       <div class="column is-4">有效期</div>
       <div class="column"></div>
     </div>  
   </div>
+  <div class="footer">
+    <div class="columns is-mobile">
+      <div class="column">
+        <a class=" button is-primary is-fullwidth">付款</a>
+      </div>
+    </div>
+  </div>
 </div>  
 </template>
 
 <script>
+import CogenHeader from '../components/CogenHeader'
+
 export default {
   name: 'Payment',
   props: {
@@ -46,6 +58,29 @@ export default {
       type: String,
       required: true
     }
+  },
+  computed: {
+    seriesUrl () {
+      return '/seriesintro/' + this.seriesId
+    },
+    series () {
+      return this.$store.state.series
+    },
+    user () {
+      return this.$auth.user()
+    }
+  },
+  mounted () {
+    let seriesId = this.seriesId
+    this.$store.dispatch('getSeries', seriesId).then((series) => {
+    }).catch((error) => {
+      console.error(error)
+      this.series = { title: '课程不存在' }
+    })
+  },
+
+  components: {
+    CogenHeader
   }
 }
 </script>

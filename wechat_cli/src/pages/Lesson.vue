@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-    <cogen-header :series-id="seriesId" :seriesTitle="series.title">
+    <cogen-header :url="seriesUrl" :title="series.title">
       <router-link slot="left" :to="{name: 'LessonList', params: {seriesId: seriesId}}" replace>返回</router-link>
     </cogen-header>
     <div class="section">
@@ -27,6 +27,12 @@ export default {
   props: {
     seriesId: { type: String, required: true },
     lessonId: { type: String, required: true }
+  },
+
+  computed: {
+    seriesUrl () {
+      return '/seriesintro/' + this.seriesId
+    }
   },
 
   data () {
