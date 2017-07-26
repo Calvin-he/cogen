@@ -49,7 +49,7 @@
 </template>
 
 <script>
-const AppId = 'wx102d66d53d18931f'
+const AppId = 'wx717826d6a1393f53'
 
 export default {
   data () {
@@ -71,9 +71,9 @@ export default {
   },
   methods: {
     isWechatBrowser () {
-      // let ua = navigator.userAgent.toLowerCase()
-      // return (/micromessenger/.test(ua))
-      return false
+      let ua = navigator.userAgent.toLowerCase()
+      return (/micromessenger/.test(ua))
+      // return false
     },
 
     loginWechat () {
@@ -81,7 +81,7 @@ export default {
       if (from.query.code == null) {
         this.$store.dispatch('getAppId').then((appId) => {
           let fullPath = encodeURIComponent(location.protocol + '//' + location.hostname + from.fullPath)
-          let wechatUrl = `https://open.weixin.qq.com/connect/oauth2/authorize?appid=${appId}&redirect_uri=${fullPath}&response_type=code&scope=snsapi_base&state=Rzyyxx#wechat_redirect`
+          let wechatUrl = `https://open.weixin.qq.com/connect/oauth2/authorize?appid=${appId}&redirect_uri=${fullPath}&response_type=code&scope=snsapi_userinfo&state=Rzyyxx#wechat_redirect`
           window.location.href = wechatUrl
         })
       } else {
