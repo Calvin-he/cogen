@@ -4,11 +4,8 @@ var mongoose = require('mongoose');
 var only = require('only');
 var Lesson = mongoose.model('Lesson');
 var Media = mongoose.model('Media');
+var User = mongoose.model("User");
 
-var authUtils = require('../config/auth');
-router.use(authUtils.authRequest)
-
-/* GET users listing. */
 router.get('/', (req, res, next) => {
     Lesson.list().then(lessons => {
         res.send(lessons)
@@ -47,5 +44,17 @@ router.get('/:id', (req, res, next) => {
         res.send(doc);
     }).catch(next);
 });
+
+router.post("/:id/comments", (req, res, next) => {
+    Lesson.addComment(req.params.id, req.body).then(doc => {
+        res.send({commentId: doc.commentsSize});
+    }).catch(next)
+})
+
+router.post("/:id/comments/:commentId/votes", (req, res, next) => {
+    User.votesComment(req.user.username, req.params.id, req.params.commentId).then(() => {
+        res.sendStatus(200)
+    }).catch(next)
+})
 
 module.exports = router;

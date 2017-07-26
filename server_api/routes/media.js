@@ -5,9 +5,6 @@ var express = require('express')
 , mongoose = require('mongoose')
 , Media = mongoose.model('Media');
 
-var authUtils = require('../config/auth');
-router.use(authUtils.authRequest)
-
 router.get('/', function(req, res, next) {
     Media.find({}).then(list => res.send(list)).catch(next);
 })
