@@ -7,7 +7,7 @@
 const mongoose = require( 'mongoose' );
 const crypto = require( 'crypto' );
 const config = require( '../config/config' )
-var only = require('only');
+var only = require( 'only' );
 
 /**
  * User Schema
@@ -20,26 +20,26 @@ const UserSchema = new mongoose.Schema( {
   phoneNo: { type: String },
   email: { type: String },
   username: { type: String, unique: true, required: true },
-  wx_openid: { type: String },
+  wx_openid: { type: String},
   nickname: { type: String },
   hashed_password: { type: String },
-  isAdmin: { type: Boolean },
+  isAdmin: { type: Boolean, default: false },
   created: { type: Date, default: Date.now },
-  votedComments: mongoose.Schema.Types.Mixed 
+  votedComments: mongoose.Schema.Types.Mixed
 } );
 
 const validatePresenceOf = value => value && value.length;
 const encryptPassword = ( password, salt ) => {
-    if ( !password || !salt) return '';
-    try {
-      return crypto
-        .createHmac( 'sha1', salt )
-        .update( password )
-        .digest( 'hex' );
-    } catch ( err ) {
-      return '';
-    }
+  if ( !password || !salt ) return '';
+  try {
+    return crypto
+      .createHmac( 'sha1', salt )
+      .update( password )
+      .digest( 'hex' );
+  } catch ( err ) {
+    return '';
   }
+}
 
 
 /**
@@ -51,7 +51,7 @@ UserSchema
   .set( function( password ) {
     if ( validatePresenceOf( password ) ) {
       this.salt = Math.round( ( new Date().valueOf() * Math.random() ) ) + '';
-      this.hashed_password = this.encryptPassword( password);
+      this.hashed_password = this.encryptPassword( password );
     }
   } );
 
@@ -94,7 +94,7 @@ UserSchema.pre( 'save', function( next ) {
  */
 var wxclient = require( '../config/wxclient' )
 UserSchema.methods = {
-  encryptPassword: function( password ){
+  encryptPassword: function( password ) {
     if ( !password ) return '';
     try {
       return crypto
@@ -129,37 +129,42 @@ UserSchema.statics = {
       if ( !credentials.username || !credentials.password ) {
         return Promise.reject( 'Invalid credentials' );
       }
-      const  preturnedFields = returnedFields + ' hashed_password salt'
-      return this.findOne( { username: credentials.username} ).then(user => {
-        
-        if(user.encryptPassword(credentials.password) === user.hashed_password){
-          return only(user, returnedFields);
-        }else{
+      const preturnedFields = returnedFields + ' hashed_password salt'
+      return this.findOne( { username: credentials.username } ).then( user => {
+
+        if ( user.encryptPassword( credentials.password ) === user.hashed_password ) {
+          return only( user, returnedFields );
+        } else {
           return Promise.reject( 'Invalid credentials' );
         }
-      })
+      } )
     } else if ( credentials.origin === 'wechat' ) {
       // wechat authenticate
       if ( !credentials.code ) {
         return Promise.reject( 'Invalid credentials' )
       }
-      wxclient.getAccessToken( credentials.code, ( err, result ) => {
-        if ( err ) {
-          return Promise.reject( err )
-        } else {
-          let openid = result.data.openid
-          return this.findOne( { wx_openid: openid } ).then(user => {
-            return only(user, returnedFields);
-          }).catch( ( err ) => {
-            return {
-              username: openid,
-              isTemp: true
-            }
-          } )
-        }
-      } );
-    } else {
-      return Promise.reject( 'Invalid credentials' )
+      return wxclient.getAccessToken( credentials.code ).then( ( result ) => {
+        let openid = result.data.openid
+        return this.find( { wx_openid: openid } ).then( users => {
+          if(users.length === 0) {
+            return wxclient.getUser(openid).then((userinfo)=>{
+              new User({
+                username: userinfo.openid,
+                wx_openid: userinfo.openid,
+                nickname: userinfo.nickname,
+                city: userinfo.country + "|" + userinfo.province + "| "+ userinfo.city,
+                avatar: userinfo.headimgurl   
+              }).save().then(doc => {
+                  return only(doc, returnedFields);
+              })
+            })
+          }else {
+            return only( users[0], returnedFields);
+          }
+        } );
+      } ).catch(err => {
+        return Promise.reject( 'Invalid credentials' )
+      })
     }
   },
 
@@ -178,11 +183,11 @@ UserSchema.statics = {
       .exec( cb );
   },
 
-    votesComment: function(username, lessonId, commentId){
-        var addToSet = {};
-        addToSet["votedComments." + lessonId] = commentId;
-        return User.update({username: username}, {$addToSet: addToSet})
-    }
+  votesComment: function( username, lessonId, commentId ) {
+    var addToSet = {};
+    addToSet[ "votedComments." + lessonId ] = commentId;
+    return User.update( { username: username }, { $addToSet: addToSet } )
+  }
 };
 
 var User = mongoose.model( 'User', UserSchema );
@@ -190,7 +195,7 @@ var User = mongoose.model( 'User', UserSchema );
 /**
  * initial the user admin 
  */
-User.findOneAndRemove({username: config.username}).then(user => {
+User.findOneAndRemove( { username: config.username } ).then( user => {
   new User( {
     nickname: "Administrator",
     username: config.username,
@@ -202,6 +207,6 @@ User.findOneAndRemove({username: config.username}).then(user => {
   } ).catch( err => {
     console.warn( err )
   } )
-});
+} );
 
 module.exports = User

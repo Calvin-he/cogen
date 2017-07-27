@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-    <cogen-header :series-id="seriesId" :seriesTitle="series.title"></cogen-header>
+    <cogen-header :url="seriesUrl" :title="series.title"></cogen-header>
     <div class="section">
       <div class="media" v-for="lesson in lessonList" v-bind:key="lesson._id">
         <div class="media-left">
@@ -50,7 +50,9 @@ export default {
     }
   },
   computed: {
-
+    seriesUrl () {
+      return '/seriesintro/' + this.seriesId
+    }
   },
   mounted () {
     this.audio = this.$el.getElementsByTagName('audio')[0]

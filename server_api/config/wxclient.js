@@ -1,8 +1,10 @@
 'use strict';
 
-var Token = require('../models/token')
+var Token = require('../models/token');
 var OAuth = require('wechat-oauth');
-var Config = require('./config')
+var Config = require('./config');
+
+var Promise = require("bluebird");
 
 
 var client = new OAuth(Config.appId, Config.secret, function (openid, callback) {
@@ -18,45 +20,41 @@ var client = new OAuth(Config.appId, Config.secret, function (openid, callback) 
 module.exports = {
     authorizeURL: client.getAuthorizeURL(Config.baseUrl + "/auth"),
     authorizeURLForWebsite: client.getAuthorizeURLForWebsite(Config.redirectURL),
-    getAccessToken: function(code, callback){
-        client.getAccessToken(code, callback);
-    },
-    getUser: function(openId, callback){
-        client.getUser(openId, callback);
-    }
+    getAccessToken: Promise.promisify(client.getAccessToken),
+    getUser: Promise.promisify(client.getUser)
 }
 
 
-// save openid in cookie
-function auth(app){
-    app.use(session({
-        secret: 'abcdefg123456',
-        resave: false,
-        saveUninitialized: true
-    }))
-    app.use(function(req, res, next){
-        if(req.path.startsWith("/auth")){
-            console.log("code", req.query.code);
-            wxclient.getAccessToken(req.query.code, function(err, result){
-                if(err){
-                    console.log("err:", err);
-                }else{
-                    req.session.openid = result.data.openid;
-                    res.redirect(req.session.savedPath);
-                }
-            });
-        } else {
-            console.log("session:", req.session);
-            console.log("session.openid:", req.session.openid);
-            var openid = req.session.openid;
-            if(!openid){
-                req.session.savedPath = req.path;
-                console.log("authorizeURL: ", wxclient.authorizeURL);
-                res.redirect(wxclient.authorizeURL);
-            }else{
-                next();
-            }
-        }
-    });
+// // save openid in cookie
+// function auth(app){
+//     app.use(session({
+//         secret: 'abcdefg123456',
+//         resave: false,
+//         saveUninitialized: true
+//     }))
+//     app.use(function(req, res, next){
+//         if(req.path.startsWith("/auth")){
+//             console.log("code", req.query.code);
+//             wxclient.getAccessToken(req.query.code, function(err, result){
+//                 if(err){
+//                     console.log("err:", err);
+//                 }else{
+//                     req.session.openid = result.data.openid;
+//                     res.redirect(req.session.savedPath);
+//                 }
+//             });
+//         } else {
+//             console.log("session:", req.session);
+//             console.log("session.openid:", req.session.openid);
+//             var openid = req.session.openid;
+//             if(!openid){
+//                 req.session.savedPath = req.path;
+//                 console.log("authorizeURL: ", wxclient.authorizeURL);
+//                 res.redirect(wxclient.authorizeURL);
+//             }else{
+//                 next();
+//             }
+//         }
+//     });
 
-}
+// }

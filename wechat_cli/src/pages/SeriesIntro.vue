@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-    <cogen-header :series-id="seriesId" :seriesTitle="series.title"></cogen-header>
+    <cogen-header :url="seriesUrl" :title="series.title"></cogen-header>
     <figure class="image">
       <img :src="series.bannerUrl">
     </figure>
@@ -56,6 +56,9 @@ export default {
   computed: {
     paid () {
       return false
+    },
+    seriesUrl () {
+      return '/seriesintro/' + this.seriesId
     }
   },
 
