@@ -13,6 +13,9 @@
       <article class="content" v-html="lesson.content">
       </article>
     </div>
+    <div class="section" id="comment-list">
+      <
+    </div>
     <footer class="footer">
     </footer>
   </div>

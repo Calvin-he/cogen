@@ -51,6 +51,24 @@
 <script>
 const AppId = 'wx717826d6a1393f53'
 
+function parseQueryString (queryString) {
+  if (queryString[0] === '?') {
+    queryString = queryString.substring(1)
+  }
+  var obj = {}
+  queryString.split('&').forEach(item => {
+    let idx = item.indexOf('=')
+    if (idx !== -1) {
+      let name = item.substring(0, idx)
+      obj[name] = item.substring(idx + 1)
+    } else {
+      let name = item.substring(0)
+      obj[name] = ''
+    }
+  })
+  return obj
+}
+
 export default {
   data () {
     return {
@@ -64,8 +82,7 @@ export default {
 
   mounted () {
     // console.log('user', this.$auth.user)
-    let redirect = this.$auth.redirect()
-    if (redirect && this.isWechatBrowser()) {
+    if (this.isWechatBrowser()) {
       this.loginWechat()
     }
   },
@@ -77,21 +94,23 @@ export default {
     },
 
     loginWechat () {
-      let from = this.$auth.redirect().from
-      if (from.query.code == null) {
+      let redirect = this.$auth.redirect()
+      if (redirect) {
         this.$store.dispatch('getAppId').then((appId) => {
-          let fullPath = encodeURIComponent(location.protocol + '//' + location.hostname + from.fullPath)
+          let fullPath = encodeURIComponent(location.protocol + '//' + location.hostname + location.pathname + '?origin=' + redirect.from.path)
           let wechatUrl = `https://open.weixin.qq.com/connect/oauth2/authorize?appid=${appId}&redirect_uri=${fullPath}&response_type=code&scope=snsapi_userinfo&state=Rzyyxx#wechat_redirect`
           window.location.href = wechatUrl
         })
       } else {
+        let query = parseQueryString(window.location.search)
         this.$auth.login({
-          data: { code: from.query.code, state: from.query.state, origin: 'wechat', appid: AppId },
+          data: { code: query.code, state: query.state, origin: 'wechat', appid: AppId },
           rememberMe: true,
-          redirect: { name: from.name },
+          redirect: { path: query.origin },
           success (res) {
             console.log('Auth Success')
             this.$auth.user(res.user)
+            this.logging = true
           },
           error (err) {
             console.log('err: ', err)
@@ -100,6 +119,7 @@ export default {
             } else {
               console.log('Error', err.message)
             }
+            this.logging = false
           }
         })
       }

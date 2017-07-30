@@ -22,6 +22,7 @@ deploy_we(){
 case $1 in
     api)
         deploy_api
+        ssh root@air '/home/www/ce/startServer.sh'
         ;;
     ui)
         deploy_ui
@@ -33,6 +34,7 @@ case $1 in
         deploy_api
         deploy_ui
         deploy_we
+        ssh root@air '/home/www/ce/startServer.sh'
         ;;
     *)
         echo "usage: ./deploy api|ui|we|all"
@@ -40,4 +42,4 @@ case $1 in
         ;;
 esac
 
-ssh root@air '/home/www/ce/startServer.sh'
+

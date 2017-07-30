@@ -15,7 +15,7 @@ router.post( '/login', ( req, res, next ) => {
       user: user
     } )
   } ).catch( e => {
-    res.sendStatus( 401 );
+    res.send( 401, {error: e} );
   } )
 } )
 

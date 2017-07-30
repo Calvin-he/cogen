@@ -1,29 +1,14 @@
 'use strict';
 
 var Token = require('../models/token');
-var OAuth = require('wechat-oauth');
+var OAuth = require('co-wechat-oauth');
 var Config = require('./config');
 
-var Promise = require("bluebird");
 
 
-var client = new OAuth(Config.appId, Config.secret, function (openid, callback) {
+var client = new OAuth(Config.appId, Config.secret);
 
-    // 传入一个根据openid获取对应的全局token的方法
-    //   // 在getUser时会通过该方法来获取token
-    Token.getToken(openid, callback);
-}, function (openid, token, callback) {
-    //       // 持久化时请注意，每个openid都对应一个唯一的token!
-    Token.setToken(openid, token, callback);
-});
-
-module.exports = {
-    authorizeURL: client.getAuthorizeURL(Config.baseUrl + "/auth"),
-    authorizeURLForWebsite: client.getAuthorizeURLForWebsite(Config.redirectURL),
-    getAccessToken: Promise.promisify(client.getAccessToken),
-    getUser: Promise.promisify(client.getUser)
-}
-
+module.exports = client
 
 // // save openid in cookie
 // function auth(app){

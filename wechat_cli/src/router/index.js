@@ -12,6 +12,7 @@ const router = new Router({
   routes: [{
     name: 'Login',
     path: '/login',
+    alias: '/',
     component: Login
   }, {
     name: 'LessonList',

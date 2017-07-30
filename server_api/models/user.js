@@ -19,6 +19,7 @@ const UserSchema = new mongoose.Schema( {
   city: { type: String },
   phoneNo: { type: String },
   email: { type: String },
+  sex: {type: Number, default: 0}, // 用户的性别，值为1时是男性，值为2时是女性，值为0时是未知 
   username: { type: String, unique: true, required: true },
   wx_openid: { type: String},
   nickname: { type: String },
@@ -143,15 +144,18 @@ UserSchema.statics = {
       if ( !credentials.code ) {
         return Promise.reject( 'Invalid credentials' )
       }
+      
+
       return wxclient.getAccessToken( credentials.code ).then( ( result ) => {
         let openid = result.data.openid
         return this.find( { wx_openid: openid } ).then( users => {
           if(users.length === 0) {
             return wxclient.getUser(openid).then((userinfo)=>{
-              new User({
+              return new User({
                 username: userinfo.openid,
                 wx_openid: userinfo.openid,
                 nickname: userinfo.nickname,
+                sex: userinfo.sex,
                 city: userinfo.country + "|" + userinfo.province + "| "+ userinfo.city,
                 avatar: userinfo.headimgurl   
               }).save().then(doc => {
@@ -163,6 +167,7 @@ UserSchema.statics = {
           }
         } );
       } ).catch(err => {
+        console.log(err);
         return Promise.reject( 'Invalid credentials' )
       })
     }
