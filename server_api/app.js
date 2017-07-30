@@ -49,10 +49,10 @@ app.use('/api/1.0/info', require('./routes/cogen'));
 app.use('/api/1.0/auth', require('./routes/auth'));
 
 apiApp = express();
+apiApp.use(authUtils.authRequest)
 apiApp.use('/lessons', require('./routes/lessons'));
 apiApp.use('/media', require('./routes/media'));
 apiApp.use('/series', require('./routes/series'));
-app.use(authUtils.authRequest)
 app.use('/api/1.0', apiApp);
 
 // catch 404 and forward to error handler
