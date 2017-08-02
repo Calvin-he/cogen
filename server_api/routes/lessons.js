@@ -5,6 +5,7 @@ var only = require('only');
 var Lesson = mongoose.model('Lesson');
 var Media = mongoose.model('Media');
 var User = mongoose.model("User");
+var Comment = mongoose.model("Comment");
 
 router.get('/', (req, res, next) => {
     Lesson.list().then(lessons => {
@@ -45,16 +46,25 @@ router.get('/:id', (req, res, next) => {
     }).catch(next);
 });
 
-router.post("/:id/comments", (req, res, next) => {
-    Lesson.addComment(req.params.id, req.body).then(doc => {
-        res.send({commentId: doc.commentsSize});
-    }).catch(next)
-})
+router.get('/:id/comments/', (req, res, next) => {
+  Comment.list(req.params.id).then((comments) => {
+    res.send(comments);
+  }).catch(next);
+});
 
-router.post("/:id/comments/:commentId/votes", (req, res, next) => {
-    User.votesComment(req.user.username, req.params.id, req.params.commentId).then(() => {
-        res.sendStatus(200)
-    }).catch(next)
-})
-
+router.post('/:id/comments/', (req, res, next) => {
+  let username = req.user.username;
+  User.findOne({username: username}).then(user => {
+    var fields = only(req.body, 'content');
+    new Comment({
+        content: fields.content,
+        lessonId: req.params.id,
+        userId: user._id,
+        userNickname: user.nickname,
+        userAvatar: user.avatar
+      }).save().then((comment) => {
+        res.send(comment);
+      });
+  }).catch(next);
+});
 module.exports = router;

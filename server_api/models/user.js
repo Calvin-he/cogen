@@ -93,7 +93,6 @@ UserSchema.pre( 'save', function( next ) {
 /**
  * Methods
  */
-var wxclient = require( '../config/wxclient' )
 UserSchema.methods = {
   encryptPassword: function( password ) {
     if ( !password ) return '';
@@ -112,7 +111,7 @@ UserSchema.methods = {
 /**
  * Statics
  */
-
+var wxclient = require( '../config/wxclient' )
 UserSchema.statics = {
 
   /**

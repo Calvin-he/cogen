@@ -53,6 +53,17 @@ const actions = {
       }
     })
   },
+  listComments ({dispatch}, {lessonId}) {
+    return Vue.axios.get(`/lessons/${lessonId}/comments/`).then((response) => {
+      return response.data
+    })
+  },
+
+  addComment ({dispatch}, {lessonId, content}) {
+    return Vue.axios.post(`/lessons/${lessonId}/comments/`, {content}).then((response) => {
+      return response.data
+    })
+  },
 
   showMessage ({commit}, {msg, level}) {
     commit('SET_MESSAGE_EVENT', {msg, level})

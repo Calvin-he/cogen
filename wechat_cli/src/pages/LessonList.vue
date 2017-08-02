@@ -2,7 +2,7 @@
   <div class="container">
     <cogen-header :url="seriesUrl" :title="series.title"></cogen-header>
     <div class="section">
-      <div class="media" v-for="lesson in lessonList" v-bind:key="lesson._id">
+      <div class="media lesson-list-item" v-for="lesson in lessonList" v-bind:key="lesson._id">
         <div class="media-left">
           <a class="button is-primary is-outlined" @click.prevent="play(lesson)">
             <span class="icon">
@@ -81,6 +81,9 @@ export default {
           if (endIdx >= totalLen) {
             this.$refs.infiniteLoading.$emit('$InfiniteLoading:complete')
           }
+        }).catch((err) => {
+          console.warn(err)
+          this.$refs.infiniteLoading.$emit('$InfiniteLoading:loaded')
         })
       } else {
         this.$refs.infiniteLoading.$emit('$InfiniteLoading:complete')
@@ -131,7 +134,7 @@ export default {
   padding-bottom: 1rem;
 }
 
-.media {
+.lesson-list-item {
   align-items: center;
 }
 

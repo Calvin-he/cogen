@@ -4,10 +4,16 @@ var mongoose = require('mongoose');
 var Media = require('./media');
 
 var CommentSchema = new mongoose.Schema({
-    username: {type: String, required: true},
+    lessonId: {type: mongoose.Schema.ObjectId, ref: 'Lesson', required: true},
     content: {type: String, required: true},
-    created: {type: Date, default: Date.now}
-})
+    voteUpNum: {type: Number, default: 0, required: true},
+    top: {type: Number, default: 0, required: true}, //置顶值，值越大，重要性越高 
+    created: {type: Date, default: Date.now, required: true},
+    userId: {type: mongoose.Schema.ObjectId, ref: 'User', required: true},
+    userNickname: {type: String},
+    userAvatar: {type: String},
+    replied: {type: [CommentSchema], default: [] } //留言回复列表
+});
 
 var LessonSchema = new mongoose.Schema({
   title: { type : String, default : '', trim : true, required: true },
@@ -23,12 +29,13 @@ var LessonSchema = new mongoose.Schema({
 LessonSchema.statics = {
     list: function(){
         return this.find({}).exec();
-    },
-    addComment: function(lessonId, comment){
-        return this.findByIdAndUpdate(lessonId,
-                {$push: {comments: comment}, $inc: {commentsSize: 1}},
-                {fields: {commentsSize: 1}}
-                );
+    }
+}
+
+
+CommentSchema.statics = {
+    list: function(lessonId){
+       return this.find({lessonId: lessonId}).sort({top: -1, created: -1}).exec();
     }
 }
 /*
@@ -45,5 +52,7 @@ LessonSchema.pre(['save', 'update'], function (next) {
 */
 
 var Lesson = mongoose.model('Lesson', LessonSchema);
+
+mongoose.model('Comment', CommentSchema);
 
 module.exports = Lesson;

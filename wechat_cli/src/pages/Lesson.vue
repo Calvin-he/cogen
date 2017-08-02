@@ -6,24 +6,23 @@
     <div class="section">
       <h4 class="title">{{lesson.title}}</h4>
       <div>
-        <span class="publish-date">2017-06-03</span>
-        <a class="public-account">何老师认知英语</a>
+        <span class="publish-date">{{lesson.updated | dateFormat}}</span>
+        <router-link class="public-source" :to="{name: 'LessonList', params: {seriesId: seriesId}}" replace>{{series.title}}</router-link>
       </div>
       <audio-player :audio-url="lesson.mediaPath" class="audio-player"></audio-player>
       <article class="content" v-html="lesson.content">
       </article>
     </div>
-    <div class="section" id="comment-list">
-      <
-    </div>
-    <footer class="footer">
-    </footer>
+
+    <Comments :lessonId="lessonId" :seriesId="seriesId"></Comments>
+ 
   </div>
 </template>
 
 <script>
 import AudioPlayer from '../components/AudioPlayer'
 import CogenHeader from '../components/CogenHeader'
+import Comments from '../components/Comments'
 
 export default {
   name: 'Lesson',
@@ -59,14 +58,16 @@ export default {
       this.lesson = lesson
     })
   },
+
   components: {
     AudioPlayer,
-    CogenHeader
+    CogenHeader,
+    Comments
   }
 }
 </script>
 
-<style>
+<style scoped>
 .full-width {
   width: 100%
 }
