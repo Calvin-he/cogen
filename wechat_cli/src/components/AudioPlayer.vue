@@ -7,7 +7,7 @@
       </div>
       <div class="audio-text">
         <div class="audio-title">{{title}}</div>
-        <div class="audio-source">来源：{{mysource}}</div>
+        <div class="audio-source">来源：{{source}}</div>
       </div>
       <div class="audio-time">{{currentTime}} / {{duration}}</div>
     </div>
@@ -32,13 +32,13 @@ export default {
       type: String,
       required: true
     },
+    title: String,
     source: String
   },
   data () {
     return {
       isPlaying: false,
       duration: '00:00',
-      title: '未知',
       mysource: this.source || '未知',
       progress: 0,
       playPercent: 0,
@@ -51,7 +51,7 @@ export default {
     this.progress = this.$el.getElementsByTagName('progress')[0]
     this.audio.addEventListener('ended', this.stop, false)
     this.audio.addEventListener('loadeddata', this.loadedData, false)
-    this.audio.addEventListener('loadedmetadata', this.loadedMetadata, false)
+    // this.audio.addEventListener('loadedmetadata', this.loadedMetadata, false)
     this.audio.addEventListener('timeupdate', this.timeUpate, false)
 
     this.audio.src = this.audioUrl
@@ -101,9 +101,6 @@ export default {
 
     loadedData (event) {
       this.duration = formatTime(this.audio.duration)
-      if (event.target.title) {
-        this.title = event.target.title
-      }
     }
   },
 

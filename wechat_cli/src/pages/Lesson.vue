@@ -9,7 +9,7 @@
         <span class="publish-date">{{lesson.updated | dateFormat}}</span>
         <router-link class="public-source" :to="{name: 'LessonList', params: {seriesId: seriesId}}" replace>{{series.title}}</router-link>
       </div>
-      <audio-player :audio-url="lesson.mediaPath" class="audio-player"></audio-player>
+      <audio-player :audio-url="lesson.mediaPath" :title="lesson.title" :source="series.title" class="audio-player"></audio-player>
       <article class="content ql-editor" v-html="lesson.content">
       </article>
     </div>
