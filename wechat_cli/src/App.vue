@@ -24,6 +24,7 @@ export default {
 </script>
 
 <style lang="scss">
+@import "~quill/dist/quill.core.css";
 @import '~bulma';
 
 $fa-font-path: '~font-awesome/fonts/';

@@ -1,6 +1,5 @@
 <template>
   <div class="container">
-    <cogen-header :url="seriesUrl" :title="series.title"></cogen-header>
     <figure class="image">
       <img :src="series.bannerUrl">
     </figure>

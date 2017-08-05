@@ -12,7 +12,7 @@ function datetimeFormat (value) {
   if (value) {
     var m = moment(value)
     var now = moment()
-    if (now.years() === m.years()) {
+    if (now.year() === m.year()) {
       if (now.dayOfYear() === m.dayOfYear()) {
         return m.format('HH:mm')
       } else {
