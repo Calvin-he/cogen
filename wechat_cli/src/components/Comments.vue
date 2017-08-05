@@ -28,11 +28,11 @@
       <div class="modal-background"></div>
       <div class="modal-card">
         <header class="modal-card-head">
-          <p class="modal-card-title">@{{lesson.title}}</p>
+          <p class="modal-card-title">@{{lessonTitle}}</p>
           <button class="delete is-large" @click="showCommentModal=false"></button>
         </header>
         <section class="modal-card-body" style="padding:0">
-          <textarea class="textarea" placeholder="字数必须多于3个字，少于500字" rows="10" ref="comment-textarea" autofocus v-model="comment"></textarea>
+          <textarea class="textarea" placeholder="字数必须多于3个字，少于500字" rows="10" ref="commentTextarea" v-model="comment"></textarea>
         </section>
         <footer class="modal-card-foot">
           <button type="submit" class="button is-success full-width" @click="submitComment">提交</button>
@@ -61,19 +61,20 @@ export default {
     return {
       comment: '',
       showCommentModal: false,
-      commentList: []
+      commentList: [],
+      lessonTitle: ''
+
     }
   },
-  computed: {
-    lesson () {
-      let les = this.$store.state.lessons.get(this.lessonId)
-      return (les != null) ? les : {}
-    }
-  },
+
   activated () {
+    this.$store.dispatch('getLesson', { seriesId: this.seriesId, lessonId: this.lessonId }).then((lesson) => {
+      this.lessonTitle = lesson.title
+    })
     this.loadComments()
   },
   deactivated () {
+    this.lessonTitle = ''
     this.comment = ''
     this.showCommentModal = false
     this.commentList = []
@@ -81,6 +82,9 @@ export default {
   methods: {
     addComment () {
       this.showCommentModal = true
+      setTimeout(() => {
+        this.$refs.commentTextarea.focus()
+      }, 300)
     },
     submitComment () {
       if (this.comment.length <= 3 || this.comment.length >= 500) {

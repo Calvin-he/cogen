@@ -5,14 +5,25 @@ import Lesson from 'pages/Lesson'
 import SeriesIntro from 'pages/SeriesIntro'
 import Payment from 'pages/Payment'
 import Login from 'auth/Login'
+import NotFound from 'pages/NotFound'
 
 Vue.use(Router)
 
 const router = new Router({
-  routes: [{
+  routes: [ {
+    path: '/',
+    redirect: to => {
+      let query = parseQueryString(window.location.search)
+      // console.log('query: ', query)
+      if (query.path) {
+        return {path: query.path, query: query}
+      } else {
+        return '/404'
+      }
+    }
+  }, {
     name: 'Login',
     path: '/login',
-    alias: '/',
     component: Login
   }, {
     name: 'LessonList',
@@ -38,7 +49,29 @@ const router = new Router({
     meta: {auth: true},
     component: Payment,
     props: true
+  }, {
+    name: 'NotFound',
+    path: '/404',
+    component: NotFound
   }]
 })
+
+function parseQueryString (queryString) {
+  if (queryString[0] === '?') {
+    queryString = queryString.substring(1)
+  }
+  var obj = {}
+  queryString.split('&').forEach(item => {
+    let idx = item.indexOf('=')
+    if (idx !== -1) {
+      let name = item.substring(0, idx)
+      obj[name] = item.substring(idx + 1)
+    } else {
+      let name = item.substring(0)
+      obj[name] = ''
+    }
+  })
+  return obj
+}
 
 export default router

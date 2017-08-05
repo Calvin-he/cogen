@@ -51,24 +51,6 @@
 <script>
 const AppId = 'wx717826d6a1393f53'
 
-function parseQueryString (queryString) {
-  if (queryString[0] === '?') {
-    queryString = queryString.substring(1)
-  }
-  var obj = {}
-  queryString.split('&').forEach(item => {
-    let idx = item.indexOf('=')
-    if (idx !== -1) {
-      let name = item.substring(0, idx)
-      obj[name] = item.substring(idx + 1)
-    } else {
-      let name = item.substring(0)
-      obj[name] = ''
-    }
-  })
-  return obj
-}
-
 export default {
   data () {
     return {
@@ -95,18 +77,24 @@ export default {
 
     loginWechat () {
       let redirect = this.$auth.redirect()
-      if (redirect) {
+      if (!redirect) {
+        return
+      }
+      console.log(location.href)
+      if (!redirect.from.query.code) {
         this.$store.dispatch('getAppId').then((appId) => {
-          let fullPath = encodeURIComponent(location.protocol + '//' + location.hostname + location.pathname + '?origin=' + redirect.from.path)
-          let wechatUrl = `https://open.weixin.qq.com/connect/oauth2/authorize?appid=${appId}&redirect_uri=${fullPath}&response_type=code&scope=snsapi_userinfo&state=Rzyyxx#wechat_redirect`
+          // console.log('browsing1 from: ' + redirect.from.path)
+          let fullPath = encodeURIComponent(location.protocol + '//' + location.hostname + location.pathname + '?path=' + redirect.from.path)
+          let wechatUrl = `https://open.weixin.qq.com/connect/oauth2/authorize?appid=${appId}&redirect_uri=${fullPath}&response_type=code&scope=snsapi_userinfo&state=wechat#wechat_redirect`
           window.location.href = wechatUrl
         })
       } else {
-        let query = parseQueryString(window.location.search)
+        // console.log('browsing2 from: ' + redirect.from.path)
+        let query = redirect.from.query // parseQueryString(window.location.search)
         this.$auth.login({
           data: { code: query.code, state: query.state, origin: 'wechat', appid: AppId },
           rememberMe: true,
-          redirect: { path: query.origin },
+          redirect: { path: redirect.from.path },
           success (res) {
             console.log('Auth Success')
             this.$auth.user(res.user)

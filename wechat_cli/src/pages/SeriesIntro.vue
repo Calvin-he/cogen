@@ -19,7 +19,7 @@
     </div>
   
     <div class="footer">
-      <div class="columns is-mobile" v-if="!isPaid()">
+      <div class="columns is-mobile" v-if="series.price>0 && !isPaid()">
         <div class="column">
           <a class=" button is-primary is-outlined" @click="gotoLessonList">试课</a>
         </div>

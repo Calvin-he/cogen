@@ -46,4 +46,8 @@ $fa-font-path: '~font-awesome/fonts/';
     z-index: 200;
   }
 }
+
+.full-width {
+  width: 100%
+}
 </style>
