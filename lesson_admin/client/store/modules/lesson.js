@@ -62,6 +62,11 @@ const actions = {
       commit('ADDMEDIA', response.data)
       return response.data
     })
+  },
+  getMediaPathById ({dispatch}, mediaId) {
+    return dispatch('listMedia').then(mediaList => {
+      return mediaList[mediaId]
+    })
   }
 }
 

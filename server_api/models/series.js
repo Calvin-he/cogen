@@ -6,6 +6,7 @@ var SeriesSchema = new mongoose.Schema({
   title: { type : String, default : '', trim : true, required: true },
   desc: { type : String, default : '', trim : true },
   bannerId: { type: mongoose.Schema.ObjectId, ref: 'Media', required: true},
+  bannerPath: {type: String, trim: true},
   price: {type: Number, default : 0},
   noticeForPurchase: {type: String, default: ''},
   lessonList: { type: [String]},

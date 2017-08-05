@@ -5,7 +5,7 @@
         <div class="box">
           <p class="control">
             <input class="input" type="text" v-model.trim="ctrl_title.value" placeholder="课程系列标题" @blur="validateTitle">
-            <span class="help is-danger" v-show="ctrl_title.errors.required">价格不能为空</span>
+            <span class="help is-danger" v-show="ctrl_title.errors.required">标题不能为空</span>
           </p>
           <p class="control">
             <textarea v-model.trim="ctrl_desc.value" class="textarea" placeholder="简要描述"></textarea>
@@ -17,7 +17,7 @@
           <p class="control has-icon">      
             <input class="input" type="number" v-model="ctrl_price.value" placeholder="购买价格" @blur="validatePrice">
             <span class="icon"><i class="fa fa-jpy"></i></span>
-            <span class="help is-danger" v-show="ctrl_price.errors.required">课程名称不能为空</span>
+            <span class="help is-danger" v-show="ctrl_price.errors.required">价格不能为空</span>
           </p>
           <p class="control">
             <textarea v-model.trim="ctrl_noticeForPurchase.value" class="textarea" placeholder="购买须知"></textarea>
@@ -110,7 +110,7 @@ export default {
       return !this.ctrl_title.errors.required
     },
     validatePrice () {
-      this.$set(this.ctrl_price.errors, 'required', !this.ctrl_price.value)
+      this.$set(this.ctrl_price.errors, 'required', this.ctrl_price.value == null)
       return !this.ctrl_price.errors.required
     },
     validateBanner () {
@@ -149,7 +149,9 @@ export default {
         value: this.series.noticeForPurchase, errors: {}
       }
       this.ctrl_bannerId = {
-        value: this.series.bannerId, errors: {}
+        value: this.series.bannerId,
+        bannerPath: this.series.bannerPath,
+        errors: {}
       }
       let selected = []
       let unselected = []
@@ -215,7 +217,7 @@ export default {
           data.noticeForPurchase = this.ctrl_noticeForPurchase.value
         }
         if (this.ctrl_bannerId.value !== this.series.bannerId) {
-          data.bannerId = this.ctr_bannerId.value
+          data.bannerId = this.ctrl_bannerId.value
         }
         if (!this.equalOfArray(selectedLessonIds, this.series.lessonList)) {
           data.lessonList = selectedLessonIds
