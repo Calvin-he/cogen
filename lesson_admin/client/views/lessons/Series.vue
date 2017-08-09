@@ -31,7 +31,7 @@
             </tfoot>
             <tbody>
               <template v-for="(series, index) in seriesList">
-                <tr>
+                <tr :key="series._id">
                   <td>{{index+1}}</td>
                   <td>{{series.title}}</td>
                   <td>{{series.lessonList.length}}</td>
@@ -45,7 +45,7 @@
                     </a>
                   </td>
                 </tr>
-                <tr v-if="expanded[series._id]">
+                <tr v-if="expanded[series._id]" :key="series._id">
                   <td colspan="5">
                     <series-editor :series="series"></series-editor>
                   </td>

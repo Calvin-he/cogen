@@ -47,9 +47,9 @@ router.get('/:id', (req, res, next) => {
 });
 
 router.get('/:id/comments/', (req, res, next) => {
-  Comment.list(req.params.id).then((comments) => {
-    res.send(comments);
-  }).catch(next);
+    Comment.list(req.params.id).then((comments) => {
+        res.send(comments);
+    }).catch(next);
 });
 
 router.post('/:id/comments/', (req, res, next) => {
@@ -59,7 +59,7 @@ router.post('/:id/comments/', (req, res, next) => {
     new Comment({
         content: fields.content,
         lessonId: req.params.id,
-        userId: user._id,
+        username: user.username,
         userNickname: user.nickname,
         userAvatar: user.avatar
       }).save().then((comment) => {
@@ -67,4 +67,18 @@ router.post('/:id/comments/', (req, res, next) => {
       });
   }).catch(next);
 });
+
+router.delete('/:id/comments/:commentId', (req, res, next) => {
+    let lessonId = req.params.id, commentId = req.params.commentId;
+    if(req.user.isAdmin) {
+        Comment.remove({_id: commentId, lessonId: lessonId}).then(() => {
+            res.send(200);
+        }).catch(next)
+    } else {   
+        Comment.remove({_id: commentId, lessonId: lessonId, username: req.user.username}).then(() => {
+            res.send(200)
+        }).catch(next)
+    }
+})
+
 module.exports = router;

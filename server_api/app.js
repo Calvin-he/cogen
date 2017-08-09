@@ -44,8 +44,7 @@ app.use(function(req, res, next) {
    }
 });
 
-app.use('/wechat', require('./routes/wechat'));
-app.use('/api/1.0/info', require('./routes/cogen'));
+app.use('/api/1.0/wechat', require('./routes/wechat'));
 app.use('/api/1.0/auth', require('./routes/auth'));
 
 apiApp = express();

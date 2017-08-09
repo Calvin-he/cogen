@@ -49,7 +49,24 @@
 </template>
 
 <script>
-const AppId = 'wx717826d6a1393f53'
+function parseSearchString () {
+  let queryString = window.location.search
+  if (queryString[0] === '?') {
+    queryString = queryString.substring(1)
+  }
+  var obj = {}
+  queryString.split('&').forEach(item => {
+    let idx = item.indexOf('=')
+    if (idx !== -1) {
+      let name = item.substring(0, idx)
+      obj[name] = item.substring(idx + 1)
+    } else {
+      let name = item.substring(0)
+      obj[name] = ''
+    }
+  })
+  return obj
+}
 
 export default {
   data () {
@@ -80,25 +97,28 @@ export default {
       if (!redirect) {
         return
       }
-      console.log(location.href)
-      if (!redirect.from.query.code) {
-        this.$store.dispatch('getAppId').then((appId) => {
-          // console.log('browsing1 from: ' + redirect.from.path)
-          let fullPath = encodeURIComponent(location.protocol + '//' + location.hostname + location.pathname + '?path=' + redirect.from.path)
-          let wechatUrl = `https://open.weixin.qq.com/connect/oauth2/authorize?appid=${appId}&redirect_uri=${fullPath}&response_type=code&scope=snsapi_userinfo&state=wechat#wechat_redirect`
-          window.location.href = wechatUrl
+      let search = parseSearchString()
+      let wxstate = 'wechat'
+      if (!search.code || search.state !== wxstate) {
+        let portStr = location.port ? (':' + location.port) : ''
+        let fullPath = encodeURIComponent(location.protocol + '//' + location.hostname + portStr + location.pathname + '#' + redirect.from.path)
+        console.log(fullPath)
+        this.$store.dispatch('getWxAuthorizeUrl', {redirectUrl: fullPath, wxstate: wxstate}).then((authorizeUrl) => {
+          console.log(authorizeUrl)
+          location.href = authorizeUrl
         })
       } else {
         // console.log('browsing2 from: ' + redirect.from.path)
-        let query = redirect.from.query // parseQueryString(window.location.search)
         this.$auth.login({
-          data: { code: query.code, state: query.state, origin: 'wechat', appid: AppId },
+          data: { code: search.code, state: search.state, origin: 'wechat' },
           rememberMe: true,
-          redirect: { path: redirect.from.path },
+          redirect: null,
           success (res) {
             console.log('Auth Success')
             this.$auth.user(res.user)
             this.logging = true
+            let portStr = location.port ? (':' + location.port) : ''
+            window.location.href = location.protocol + '//' + location.hostname + portStr + location.pathname + '#' + redirect.from.path
           },
           error (err) {
             console.log('err: ', err)
@@ -121,7 +141,7 @@ export default {
       let redirectPath = this.$auth.redirect() ? this.$auth.redirect().from.fullPath : '/'
       this.logging = true
       this.$auth.login({
-        data: { username: this.username, password: this.password, origin: 'cogen', appid: AppId },
+        data: { username: this.username, password: this.password, origin: 'cogen' },
         rememberMe: this.rememberMe,
         redirect: { path: redirectPath },
         success (res) {

@@ -9,7 +9,7 @@ var CommentSchema = new mongoose.Schema({
     voteUpNum: {type: Number, default: 0, required: true},
     top: {type: Number, default: 0, required: true}, //置顶值，值越大，重要性越高 
     created: {type: Date, default: Date.now, required: true},
-    userId: {type: mongoose.Schema.ObjectId, ref: 'User', required: true},
+    username: {type: String, required: true},
     userNickname: {type: String},
     userAvatar: {type: String},
     replied: {type: [CommentSchema], default: [] } //留言回复列表

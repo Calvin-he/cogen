@@ -65,6 +65,10 @@ const actions = {
     })
   },
 
+  deleteComment ({dispatch}, {lessonId, commentId}) {
+    return Vue.axios.delete(`/lessons/${lessonId}/comments/${commentId}`)
+  },
+
   showMessage ({commit}, {msg, level}) {
     commit('SET_MESSAGE_EVENT', {msg, level})
     setTimeout(() => {
@@ -72,15 +76,10 @@ const actions = {
     }, 1500)
   },
 
-  getAppId ({dispatch, state}) {
-    if (state.appId != null) {
-      return Promise.resolve(state.appId)
-    } else {
-      return Vue.axios.get('/info').then(res => {
-        state.appId = res.data.appId
-        return state.appId
-      })
-    }
+  getWxAuthorizeUrl ({dispatch}, {redirectUrl, wxstate}) {
+    return Vue.axios.get(`/wechat/authorize_url?redirect_url=${redirectUrl}&state=${wxstate}`).then(res => {
+      return res.data.authorize_url
+    })
   }
 }
 

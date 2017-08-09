@@ -20,7 +20,9 @@
           {{comment.content}}
         </p>
       </div>
-      <div class="media-right">{{comment.created | datetimeFormat}}
+      <div class="media-right">{{comment.created | datetimeFormat}} 
+        <a class="delete is-warning is-large" @click="deleteComment(comment._id)" v-if="canDelete(comment.username)">    
+        </a>
       </div>
     </div>
   
@@ -102,7 +104,17 @@ export default {
       this.$store.dispatch('listComments', { lessonId: this.lessonId }).then((comments) => {
         this.commentList = comments
       })
+    },
+    deleteComment (commentId) {
+      this.$store.dispatch('deleteComment', {lessonId: this.lessonId, commentId: commentId}).then(() => {
+        this.commentList = this.commentList.filter(c => c._id !== commentId)
+      })
+    },
+    canDelete (username) {
+      let user = this.$auth.user()
+      return user.isAdmin || user.username === username
     }
+
   },
   components: {
     InfiniteLoading
