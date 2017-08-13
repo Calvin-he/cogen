@@ -8,13 +8,25 @@ import store from './store'
 import axios from 'axios'
 import VueAxios from 'vue-axios'
 import VueAuth from '@websanova/vue-auth'
-// import Weauth from './auth/vue-weauth'
+import wx from 'weixin-js-sdk'
+
+// if (window.location.search.indexOf('from=singlemessage')) {
+//   window.location.href = window.location.origin + window.location.pathname + window.location.hash
+// }
 
 Vue.use(VueAxios, axios)
 Vue.axios.defaults.baseURL = '/api/1.0'
 Vue.axios.defaults.timeout = 20000
-
-// Vue.use(Weauth, {axios, router, appid: 'wx1ac88143b7396b56'})
+Vue.axios.post('/wechat/config', {
+  debug: false,
+  jsApiList: ['onMenuShareTimeline', 'onMenuShareAppMessage'],
+  url: location.href
+}).then(res => {
+  wx.config(res.data.params)
+  wx.error(res => {
+    console.log(res)
+  })
+})
 
 document.addEventListener('DOMContentLoaded', function () {
   if (window.FastClick) window.FastClick.attach(document.body)
@@ -54,11 +66,11 @@ new Vue({
 
   beforeMount () {
     // Add a response interceptor
-    this.axios.interceptors.response.use(function (response) {
+    Vue.axios.interceptors.response.use(function (response) {
       return response
     }, (err) => {
       if (err.response.status === 403) {
-        this.$auth.logout({
+        Vue.$auth.logout({
           redirect: '/login',
           makeRequest: false
         })
@@ -67,4 +79,5 @@ new Vue({
       }
     })
   }
+
 })

@@ -74,12 +74,6 @@ const actions = {
     setTimeout(() => {
       commit('SET_MESSAGE_EVENT', null)
     }, 1500)
-  },
-
-  getWxAuthorizeUrl ({dispatch}, {redirectUrl, wxstate}) {
-    return Vue.axios.get(`/wechat/authorize_url?redirect_url=${redirectUrl}&state=${wxstate}`).then(res => {
-      return res.data.authorize_url
-    })
   }
 }
 

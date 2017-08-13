@@ -37,6 +37,7 @@
 
 <script>
 import CogenHeader from '../components/CogenHeader'
+import wechat from '../wechat'
 
 export default {
   name: 'SeriesIntro',
@@ -59,6 +60,10 @@ export default {
     seriesUrl () {
       return '/seriesintro/' + this.seriesId
     }
+  },
+
+  activated () {
+    wechat.wxShare({title: this.series.title, desc: this.series.desc})
   },
 
   mounted () {

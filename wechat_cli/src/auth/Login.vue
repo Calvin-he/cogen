@@ -102,10 +102,8 @@ export default {
       if (!search.code || search.state !== wxstate) {
         let portStr = location.port ? (':' + location.port) : ''
         let fullPath = encodeURIComponent(location.protocol + '//' + location.hostname + portStr + location.pathname + '#' + redirect.from.path)
-        console.log(fullPath)
-        this.$store.dispatch('getWxAuthorizeUrl', {redirectUrl: fullPath, wxstate: wxstate}).then((authorizeUrl) => {
-          console.log(authorizeUrl)
-          location.href = authorizeUrl
+        this.axios.get(`/wechat/authorize_url?redirect_url=${fullPath}&state=${wxstate}`).then(res => {
+          location.href = res.data.authorize_url
         })
       } else {
         // console.log('browsing2 from: ' + redirect.from.path)

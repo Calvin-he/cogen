@@ -32,6 +32,7 @@
 <script>
 import InfiniteLoading from 'vue-infinite-loading'
 import CogenHeader from '../components/CogenHeader'
+import wechat from '../wechat'
 
 export default {
   name: 'LessonList',
@@ -54,8 +55,12 @@ export default {
       return '/seriesintro/' + this.seriesId
     }
   },
+  activated () {
+    wechat.wxShare({title: this.series.title, desc: this.series.desc})
+  },
   mounted () {
     this.audio = this.$el.getElementsByTagName('audio')[0]
+    this.audio.addEventListener('ended', this.eventPlayEnd, false)
   },
   methods: {
     onInfinite () {
@@ -107,10 +112,19 @@ export default {
         this.audio.play()
       } else {
         this.currentPlayingLesson = null
-        this.audio.pause()
         this.audio.src = ''
       }
+    },
+    eventPlayEnd () {
+      if (this.currentPlayingLesson) {
+        let idx = this.lessonList.indexOf(this.currentPlayingLesson)
+        this.currentPlayingLesson = null
+        if (idx >= 0 && idx < this.lessonList.length - 1) {
+          this.play(this.lessonList[idx + 1])
+        }
+      }
     }
+
   },
   beforeRouteLeave (to, from, next) {
     if (this.currentPlayingLesson != null) {

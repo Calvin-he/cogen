@@ -23,6 +23,7 @@
 import AudioPlayer from '../components/AudioPlayer'
 import CogenHeader from '../components/CogenHeader'
 import Comments from '../components/Comments'
+import wechat from '../wechat'
 
 export default {
   name: 'Lesson',
@@ -43,22 +44,20 @@ export default {
       lesson: { mediaPath: '' }
     }
   },
-  watch: {
-    lessonId (newV) {
+
+  activated () {
+    this.loadLesson()
+  },
+
+  methods: {
+    loadLesson () {
       this.$store.dispatch('getLesson', { seriesId: this.seriesId, lessonId: this.lessonId }).then((lesson) => {
         this.series = this.$store.state.series
         this.lesson = lesson
+        wechat.wxShare({title: this.lesson.title, desc: this.series.title})
       })
     }
   },
-
-  mounted () {
-    this.$store.dispatch('getLesson', { seriesId: this.seriesId, lessonId: this.lessonId }).then((lesson) => {
-      this.series = this.$store.state.series
-      this.lesson = lesson
-    })
-  },
-
   components: {
     AudioPlayer,
     CogenHeader,

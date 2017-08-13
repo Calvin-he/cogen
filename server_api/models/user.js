@@ -111,7 +111,7 @@ UserSchema.methods = {
 /**
  * Statics
  */
-var wxclient = require( '../config/wxclient' )
+var wxAuthClient = require( '../config/wxclient' ).authClient
 UserSchema.statics = {
 
   /**
@@ -145,11 +145,11 @@ UserSchema.statics = {
       }
       
 
-      return wxclient.getAccessToken( credentials.code ).then( ( result ) => {
+      return wxAuthClient.getAccessToken( credentials.code ).then( ( result ) => {
         let openid = result.data.openid
         return this.find( { wx_openid: openid } ).then( users => {
           if(users.length === 0) {
-            return wxclient.getUser(openid).then((userinfo)=>{
+            return wxAuthClient.getUser(openid).then((userinfo)=>{
               return new User({
                 username: userinfo.openid,
                 wx_openid: userinfo.openid,
