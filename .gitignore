@@ -9,4 +9,7 @@ log/
 .project
 gen/
 classes/
-build/
+uploads/
+dist/
+server_api/public/admin/
+**/*.log
