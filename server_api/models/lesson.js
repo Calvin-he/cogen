@@ -20,6 +20,8 @@ var LessonSchema = new mongoose.Schema({
   content: { type : String, default : '', trim : true },
   mediaId: { type: mongoose.Schema.ObjectId, ref: 'Media', required: true},
   mediaPath: { type : String, default : '', trim : true },
+  mediaId2: { type: mongoose.Schema.ObjectId, ref: 'Media'},
+  mediaPath2: { type : String, default : '', trim : true },
   commentsSize: {type: Number, default: 0},
   comments: [CommentSchema],
   created: {type: Date, default: Date.now },

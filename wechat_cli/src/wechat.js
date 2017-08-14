@@ -5,7 +5,7 @@ var api = {
     let path = window.location.pathname.endsWith('/') ? window.location.pathname : (window.location.pathname + '/')
     let imgUrl = window.location.origin + path + 'static/cognitiven.jpg'
     let link = window.location.href
-    setTimeout(function () {
+    wx.ready(function () {
       wx.onMenuShareAppMessage({
         title: title || document.title,
         desc: desc, // 分享描述
@@ -30,7 +30,7 @@ var api = {
         cancel: function () {
         }
       })
-    }, 1000)
+    })
   }
 }
 

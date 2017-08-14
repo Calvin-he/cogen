@@ -56,7 +56,13 @@ export default {
     }
   },
   activated () {
-    wechat.wxShare({title: this.series.title, desc: this.series.desc})
+    if (this.series._id) {
+      wechat.wxShare({title: this.series.title, desc: this.series.desc})
+    } else {
+      setTimeout(() => {
+        wechat.wxShare({title: this.series.title, desc: this.series.desc})
+      }, 2000)
+    }
   },
   mounted () {
     this.audio = this.$el.getElementsByTagName('audio')[0]

@@ -14,7 +14,7 @@ router.get('/', (req, res, next) => {
 });
 
 router.post('/', (req, res, next) => {
-    var fields = only(req.body, 'title content mediaId');
+    var fields = only(req.body, 'title content mediaId mediaId2');
     Media.findById(fields.mediaId).then(media => {
         fields.mediaPath = media.path;
         var lesson = new Lesson(fields);
@@ -23,7 +23,7 @@ router.post('/', (req, res, next) => {
 });
 
 router.put('/:id', (req, res, next) => {
-    var fields = only(req.body, 'title content mediaId');
+    var fields = only(req.body, 'title content mediaId mediaId2');
     fields.updated = Date.now();
     if(fields.mediaId) {
         Media.findById(fields.mediaId).then(media => {
