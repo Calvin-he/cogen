@@ -1,4 +1,3 @@
-
 deploy_api(){
     rsync -av --delete --exclude-from=.gitignore --exclude=public server_api/ dev@air:/home/www/ce/code/
 }
@@ -31,9 +30,9 @@ case $1 in
         deploy_we
         ;;
     all)
-        deploy_api
         deploy_ui
         deploy_we
+        deploy_api
         ssh root@air '/home/www/ce/startServer.sh'
         ;;
     *)

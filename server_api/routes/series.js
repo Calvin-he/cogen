@@ -51,7 +51,7 @@ router.get('/:id/search', (req,res, next) => {
     lessonIds = lessonIds.split(',');
 
     Series.findById(seriesId).then(seriesDoc => {
-      Lesson.find({_id : {$in: lessonIds}}, '_id, title mediaPath').then(lessons => {
+      Lesson.find({_id : {$in: lessonIds}}, '_id, title mediaPath mediaPath2').then(lessons => {
           let newLessons = lessons.map((les) => {
             if ( seriesDoc.freeLessons.indexOf(les._id) === -1 ) {
               les['mediaPath'] = null

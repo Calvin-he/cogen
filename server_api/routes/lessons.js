@@ -13,27 +13,34 @@ router.get('/', (req, res, next) => {
     }).catch(next);
 });
 
-router.post('/', (req, res, next) => {
+router.post('/', async (req, res, next) => {
     var fields = only(req.body, 'title content mediaId mediaId2');
-    Media.findById(fields.mediaId).then(media => {
-        fields.mediaPath = media.path;
-        var lesson = new Lesson(fields);
-        return lesson.save().then((doc) => res.send(doc));
-    }).catch(next);
+    if(fields.mediaId) {
+        let media = await Media.findById(fields.mediaId).exec()
+        fields.mediaPath = media.path;    
+    } 
+    if(fields.mediaId2) {
+        let media2 = await Media.findById(fields.mediaId2).exec()
+        fields.mediaPath2 = media2.path        
+    }
+    let lesson = new Lesson(fields);
+    lesson.save().then((doc) => res.send(doc));
 });
 
-router.put('/:id', (req, res, next) => {
+router.put('/:id', async (req, res, next) => {
     var fields = only(req.body, 'title content mediaId mediaId2');
     fields.updated = Date.now();
     if(fields.mediaId) {
-        Media.findById(fields.mediaId).then(media => {
-            fields.mediaPath = media.path;
-            return Lesson.findByIdAndUpdate(req.params.id, fields, {new: true}).then((doc) => res.send(doc));
-        }).catch(next);
-    }else {
-        Lesson.findByIdAndUpdate(req.params.id, fields, {new: true}).then((doc) => res.send(doc)).catch(next);
+        let media = await Media.findById(fields.mediaId).exec()
+        fields.mediaPath = media.path;    
+    } 
+    if(fields.mediaId2) {
+        let media2 = await Media.findById(fields.mediaId2).exec()
+        fields.mediaPath2 = media2.path        
     }
-    
+    Lesson.update({_id: req.params.id}, fields).then(() => {
+        Lesson.findById(req.params.id).then(doc => res.send(doc))
+    }).catch(next)   
 });
 
 router.delete('/:id', (req, res, next) => {

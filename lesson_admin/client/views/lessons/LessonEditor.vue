@@ -6,8 +6,12 @@
     </p>
   
     <p class="control">
-      <select-media v-model="ctrl_mediaId.value"  placeholder="选择录音材料" extensions="mp3" accept="audio/mpeg"></select-media>
+      <select-media v-model="ctrl_mediaId.value"  placeholder="选择开头录音材料" extensions="mp3" accept="audio/mpeg"></select-media>
       <span class="help is-danger" v-show="ctrl_mediaId.errors.required">必须选择录音材料</span>
+    </p>
+
+    <p class="control">
+      <select-media v-model="ctrl_mediaId2.value"  placeholder="选择结尾录音材料(选填)" extensions="mp3" accept="audio/mpeg"></select-media>
     </p>
   
     <p class="control">
@@ -44,6 +48,7 @@ export default {
       isloading: false,
       ctrl_title: { value: this.lesson.title, errors: {} },
       ctrl_mediaId: { value: this.lesson.mediaId, errors: {} },
+      ctrl_mediaId2: { value: this.lesson.mediaId2 },
       ctrl_content: { value: this.lesson.content, errors: {} }
 
     }
@@ -87,7 +92,8 @@ export default {
         let data = {
           title: this.ctrl_title.value,
           mediaId: this.ctrl_mediaId.value,
-          content: this.ctrl_content.value
+          content: this.ctrl_content.value,
+          mediaId2: this.ctrl_mediaId2.value
         }
         this.isloading = true
         this.$store.dispatch('addLesson', data).then(() => {
@@ -104,6 +110,9 @@ export default {
         }
         if (this.lesson.content !== this.ctrl_content.value) {
           data.content = this.ctrl_content.value
+        }
+        if (this.lesson.mediaId2 !== this.ctrl_mediaId2.value) {
+          data.mediaId2 = this.ctrl_mediaId2.value
         }
         if (Object.keys(data).length > 0) {
           data._id = this.lesson._id
@@ -127,6 +136,9 @@ export default {
       this.ctrl_content = {
         value: this.lesson.content,
         errors: {}
+      }
+      this.ctrl_mediaId2 = {
+        value: this.lesson.mediaId2
       }
     },
 

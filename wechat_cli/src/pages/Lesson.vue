@@ -9,9 +9,9 @@
         <span class="publish-date">{{lesson.updated | dateFormat}}</span>
         <router-link class="public-source" :to="{name: 'LessonList', params: {seriesId: seriesId}}" replace>{{series.title}}</router-link>
       </div>
-      <audio-player :audio-url="lesson.mediaPath" :title="lesson.title" :source="series.title" class="audio-player"></audio-player>
-      <article class="ql-editor" v-html="lesson.content">
-      </article>
+      <audio-player :audio-url="lesson.mediaPath" :title="lesson.title" :source="series.title" class="audio-player" v-if="lesson.mediaPath">></audio-player>
+      <article class="ql-editor" v-html="lesson.content"></article>
+      <audio-player :audio-url="lesson.mediaPath2" title="" :source="series.title" class="audio-player" v-if="lesson.mediaPath2"></audio-player>
     </div>
 
     <Comments :lessonId="lessonId" :seriesId="seriesId"></Comments>
@@ -41,7 +41,7 @@ export default {
   data () {
     return {
       series: {},
-      lesson: { mediaPath: '' }
+      lesson: { mediaPath: '', mediaPath2: '' }
     }
   },
 
@@ -54,6 +54,7 @@ export default {
       this.$store.dispatch('getLesson', { seriesId: this.seriesId, lessonId: this.lessonId }).then((lesson) => {
         this.series = this.$store.state.series
         this.lesson = lesson
+        // console.log(this.lesson)
         wechat.wxShare({title: this.lesson.title, desc: this.series.title})
       })
     }

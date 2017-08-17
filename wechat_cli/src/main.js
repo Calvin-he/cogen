@@ -8,7 +8,7 @@ import store from './store'
 import axios from 'axios'
 import VueAxios from 'vue-axios'
 import VueAuth from '@websanova/vue-auth'
-import wx from 'weixin-js-sdk'
+import wx from './wechat'
 
 // if (window.location.search.indexOf('from=singlemessage')) {
 //   window.location.href = window.location.origin + window.location.pathname + window.location.hash
@@ -23,9 +23,6 @@ Vue.axios.post('/wechat/config', {
   url: location.href
 }).then(res => {
   wx.config(res.data.params)
-  wx.error(res => {
-    console.log(res)
-  })
 })
 
 document.addEventListener('DOMContentLoaded', function () {

@@ -1,6 +1,13 @@
 import wx from 'weixin-js-sdk'
 
 var api = {
+  config (params) {
+    wx.config(params)
+    wx.error(res => {
+      console.log(res)
+    })
+  },
+
   wxShare ({title, desc}) {
     let path = window.location.pathname.endsWith('/') ? window.location.pathname : (window.location.pathname + '/')
     let imgUrl = window.location.origin + path + 'static/cognitiven.jpg'

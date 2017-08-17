@@ -40,18 +40,7 @@ CommentSchema.statics = {
        return this.find({lessonId: lessonId}).sort({top: -1, created: -1}).exec();
     }
 }
-/*
-LessonSchema.pre(['save', 'update'], function (next) {
-    Media.findById(this.mediaId).then(media => {
-        this.mediaPath = media.path;
-        next();
-    });
-    if (media) {
-    }else {
-        next(new Error('missing media!'));
-    }
-});
-*/
+
 
 var Lesson = mongoose.model('Lesson', LessonSchema);
 

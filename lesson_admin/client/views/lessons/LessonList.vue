@@ -84,7 +84,8 @@ export default {
       newLesson: {
         title: '',
         mediaId: null,
-        content: ''
+        content: '',
+        mediaId2: null
       },
       playingLessonId: ''
     }
