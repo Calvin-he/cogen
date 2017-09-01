@@ -69,6 +69,12 @@ const actions = {
     return Vue.axios.delete(`/lessons/${lessonId}/comments/${commentId}`)
   },
 
+  getSeriesPayParams ({dispatch}, {seriesId}) {
+    return Vue.axios.get(`/series/${seriesId}/wxpay`).then((response) => {
+      return response.data
+    })
+  },
+
   showMessage ({commit}, {msg, level}) {
     commit('SET_MESSAGE_EVENT', {msg, level})
     setTimeout(() => {

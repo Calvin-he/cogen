@@ -2,9 +2,12 @@ var express = require('express');
 var router = express.Router();
 var mongoose = require('mongoose');
 var only = require('only');
+var wxPayclient = require('../config/wxclient').payClient
 var Series = mongoose.model('Series');
 var Lesson = mongoose.model('Lesson');
 var Media = mongoose.model('Media');
+var Order = mongoose.model('Order')
+
 
 
 router.get('/', (req, res, next) => {
@@ -62,5 +65,38 @@ router.get('/:id/search', (req,res, next) => {
       }).catch(next);
     });
 })
+
+router.get('/:id/wxpay', async (req, res, next) => {
+  let series = await Series.findById(req.params.id)
+  var orderParams = {
+    body: series.title,
+    attach: `{"seriesId": "${series.seriesId}"}`,
+    out_trade_no: Date.now().toString() + Math.floor(Math.random()*1e10),
+    total_fee: series.price * 100,
+    spbill_create_ip: req.ip,
+    openid: req.user.username, //username is openid
+    notify_url: "http://www.rzyyx.cn/cogen/wechat/api/1.0/wechat/paynotify"
+  }
+  wxPayclient.getBrandWCPayRequestParams(orderParams, (err, payargs) => {
+    if(!err) {
+      let order = new Order({
+        _id: orderParams.out_trade_no,
+        username: req.user.username,
+        seriesId: series._id,
+        fee: series.price,
+        state: 'prepay'
+      })
+      order.save().then(() => {
+        res.send(payargs)
+      }).catch((err) => {
+        console.log(err)
+        next(err)
+      })
+    } else {
+      res.send(400, err)
+    }
+  })
+})
+
 
 module.exports = router;

@@ -45,7 +45,7 @@
     <div class="footer">
       <div class="columns is-mobile">
         <div class="column">
-          <a class=" button is-primary is-fullwidth">付款</a>
+          <a class=" button is-primary is-fullwidth" @click="startWxPay">付款</a>
         </div>
       </div>
     </div>
@@ -54,6 +54,7 @@
 
 <script>
 import CogenHeader from '../components/CogenHeader'
+import wx from '../wechat'
 
 export default {
   name: 'Payment',
@@ -94,7 +95,13 @@ export default {
       this.series = { title: '课程不存在' }
     })
   },
-
+  methods: {
+    startWxPay () {
+      this.$store.dispatch('getSeriesPayParams', {seriesId: this.seriesId}).then((payparams) => {
+        wx.pay(payparams)
+      })
+    }
+  },
   components: {
     CogenHeader
   }

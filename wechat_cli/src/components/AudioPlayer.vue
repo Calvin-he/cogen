@@ -10,7 +10,7 @@
       <strong class="share_audio_title" aria-describedby="语音标题" role="link">{{title}}</strong>
       <p class="share_audio_tips" style="display:none">来自{{mysource}}</p>
       <div class="share_audio_progress_wrp">
-        <div class="share_audio_progress">
+        <div class="share_audio_progress" @click.stop="setProgress">
           <div :style="{width: playPercent}" class="share_audio_progress_inner"></div>
           <div class="share_audio_progress_buffer" style="width:0"></div>
           <div class="share_audio_progress_loading" style="display:none;">
@@ -118,6 +118,11 @@ export default {
 
     loadedData (event) {
       this.duration = formatTime(this.audio.duration)
+    },
+
+    setProgress (event) {
+      let percent = event.offsetX / event.currentTarget.clientWidth
+      this.audio.currentTime = percent * this.audio.duration
     }
   }
 }

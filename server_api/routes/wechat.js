@@ -3,6 +3,9 @@ var router = express.Router();
 var config = require('../config/config')
 var only = require( 'only' );
 var wxclient = require( '../config/wxclient' )
+var mongoose = require('mongoose');
+var Series = mongoose.model('Series')
+var wxclient = require('../config/wxclient')
 
 var config = {
   appid: config.appId
@@ -22,6 +25,14 @@ router.post('/config', (req, res, next) => {
     res.send({params})
   }).catch(next)
 })
+
+router.post('/paynofify', wxclient.payClient.useWXCallback(function(msg, req, res, next){
+  if( msg.sign !== wxPayclient.sign(msg) ) {
+    res.fail()
+  }
+  console.log(msg)
+  res.success();
+}))
 
 // router.get('/event', wechat(config, function (req, res, next) {
 // }));

@@ -23,7 +23,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
  // CookieParser should be above sessio
 app.use(cookieParser());
-app.use(express.static(path.join(__dirname, 'public')));
+app.use("/cogen", express.static(path.join(__dirname, 'public')));
 app.use(express.static(config.uploadDir));
 
 fs.readdirSync('./models')

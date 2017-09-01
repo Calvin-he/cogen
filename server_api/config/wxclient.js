@@ -4,6 +4,7 @@ var Token = require('../models/token');
 var OAuth = require('co-wechat-oauth');
 var WechatAPI = require('co-wechat-api');
 var Config = require('./config');
+var fs = require('fs')
 
 
 
@@ -25,8 +26,19 @@ apiClient.registerTicketHandle(async function (type) {
   jsapiTicket = ticket
 });
 
+var WXPay = require('weixin-pay');
+
+var initConfig = {
+  appid: Config.appId,
+  mch_id: Config.mchId,
+  partner_key: Config.mchApiKey,
+  pfx: Config.mchCertPath && fs.readFileSync(Config.mchCertPath)
+};
+var payClient = new WXPay(initConfig);
+
 module.exports = {
   authClient,
-  apiClient
+  apiClient,
+  payClient
 }
 

@@ -17,13 +17,7 @@ import wx from './wechat'
 Vue.use(VueAxios, axios)
 Vue.axios.defaults.baseURL = '/api/1.0'
 Vue.axios.defaults.timeout = 20000
-Vue.axios.post('/wechat/config', {
-  debug: false,
-  jsApiList: ['onMenuShareTimeline', 'onMenuShareAppMessage'],
-  url: location.href
-}).then(res => {
-  wx.config(res.data.params)
-})
+wx.config()
 
 document.addEventListener('DOMContentLoaded', function () {
   if (window.FastClick) window.FastClick.attach(document.body)

@@ -1,10 +1,17 @@
 import wx from 'weixin-js-sdk'
+import Vue from 'vue'
 
 var api = {
-  config (params) {
-    wx.config(params)
-    wx.error(res => {
-      console.log(res)
+  config () {
+    Vue.axios.post('/wechat/config', {
+      debug: false,
+      jsApiList: ['onMenuShareTimeline', 'onMenuShareAppMessage', 'chooseWXPay'],
+      url: window.location.href
+    }).then(res => {
+      wx.config(res.data.params)
+      wx.error(res => {
+        console.log(res)
+      })
     })
   },
 
@@ -37,6 +44,31 @@ var api = {
         cancel: function () {
         }
       })
+    })
+  },
+
+  pay (payparams) {
+    /* eslint-disable-next-line
+    WeixinJSBridge.invoke(
+      'getBrandWCPayRequest', JSON.stringify(payparams), function (res) {
+        if (res.err_msg === 'get_brand_wcpay_request:ok') {
+          alert('paid successfully')
+        } else {
+          alert(res.err_msg + ': ' + JSON.stringify(payparams))
+        }
+      }) */
+    wx.chooseWXPay({
+      timestamp: payparams.timeStamp,
+      nonceStr: payparams.nonceStr,
+      package: payparams['package'],
+      signType: payparams.signType,
+      paySign: payparams.paySign,
+      success: (res) => {
+        alert(res)
+      },
+      fail: (err) => {
+        alert(JSON.stringify(err) + ': ' + JSON.stringify(payparams))
+      }
     })
   }
 }

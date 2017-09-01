@@ -116,7 +116,7 @@ export default {
             this.$auth.user(res.user)
             this.logging = true
             let portStr = location.port ? (':' + location.port) : ''
-            window.location.href = location.protocol + '//' + location.hostname + portStr + location.pathname + '#' + redirect.from.path
+            window.location.href = location.protocol + '//' + location.hostname + portStr + location.pathname + '?#' + redirect.from.path
           },
           error (err) {
             console.log('err: ', err)
