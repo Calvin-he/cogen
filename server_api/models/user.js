@@ -26,6 +26,7 @@ const UserSchema = new mongoose.Schema( {
   hashed_password: { type: String },
   isAdmin: { type: Boolean, default: false },
   created: { type: Date, default: Date.now },
+  paidSeries: mongoose.Schema.Types.Mixed, // {seriesId: lessonIdOfLastRead}
   votedComments: mongoose.Schema.Types.Mixed
 } );
 
@@ -123,7 +124,7 @@ UserSchema.statics = {
    */
 
   authenticate: function( credentials ) {
-    const returnedFields = 'username nickname avatar city phoneNo email isAdmin'
+    const returnedFields = 'username nickname avatar city phoneNo email isAdmin paidSeries'
     if ( credentials.origin === 'cogen' ) {
       // authenticate by username and password
       if ( !credentials.username || !credentials.password ) {
@@ -185,6 +186,12 @@ UserSchema.statics = {
     return this.findOne( options.criteria )
       .select( options.select )
       .exec( cb );
+  },
+
+  addPaidSeries: function(username, seriesId) {
+    let updated = {}
+    updated['paidSeries.' + seriesId] = null
+    return User.update({username: username}, {$set: updated})
   },
 
   votesComment: function( username, lessonId, commentId ) {

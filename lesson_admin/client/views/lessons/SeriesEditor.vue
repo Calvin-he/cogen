@@ -268,8 +268,8 @@ export default {
     },
 
     openPreview () {
-      window.open('/wechat/#/seriesintro/' + this.series._id, 'Preview_Series_Window',
-          'height=736, width=414, menubar=no, toolbar=no, location=no')
+      window.open('/cogen/wechat/#/seriesintro/' + this.series._id, 'Preview_Series_Window',
+          'height=736, width=414, menubar=no, toolbar=no, location=yes')
     }
   },
   components: {

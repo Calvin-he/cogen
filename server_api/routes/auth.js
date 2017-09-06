@@ -32,9 +32,8 @@ router.get('/refresh', authUtils.authRequest, (req, res, next) => {
 })
 
 router.get( '/user', authUtils.authRequest, function( req, res, next ) {
-  console.log(req.user);
   User.findOne({username: req.user.username}).then(doc => {
-    let user = only(doc, 'username nickname avatar city phoneNo email isAdmin')
+    let user = only(doc, 'username nickname avatar city phoneNo email isAdmin paidSeries')
     res.send({ data: user })
   }).catch( (err) => {
     res.status(404).send(err)

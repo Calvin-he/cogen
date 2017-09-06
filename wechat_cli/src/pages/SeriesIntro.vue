@@ -98,7 +98,7 @@ export default {
 
     isPaid () {
       let user = this.$auth.user()
-      let series = (user.series || []).find(v => v.seriesId === this.seriesId)
+      let series = user.paidSeries && user.paidSeries.hasOwnProperty(this.seriesId)
       return series != null
     }
   },

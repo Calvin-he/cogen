@@ -8,13 +8,20 @@ var Lesson = mongoose.model('Lesson');
 var Media = mongoose.model('Media');
 var Order = mongoose.model('Order')
 
+var onlyAdminVisiting = (req, res, next) => {
+    if (!req.user.isAdmin) {
+        res.sendStatus(403)
+    }
+}
 
 
 router.get('/', (req, res, next) => {
+  onlyAdminVisiting(req, res, next)
   Series.list().then(seriess => res.send(seriess)).catch(next);
 });
 
 router.post('/', (req, res, next) => {
+  onlyAdminVisiting(req, res, next)
   var series = new Series(only(req.body, 'title desc price noticeForPurchase bannerId lessonList freeLessons'));
   Media.findById(fields.bannerId).then(media => {
     series.bannerPath = media.path
@@ -23,6 +30,7 @@ router.post('/', (req, res, next) => {
 });
 
 router.put('/:id', (req, res, next) => {
+  onlyAdminVisiting(req, res, next)
   var fields = only(req.body, 'title desc price noticeForPurchase bannerId lessonList freeLessons');
   fields.updated = Date.now()
   if(fields.bannerId) {
@@ -37,6 +45,7 @@ router.put('/:id', (req, res, next) => {
 });
 
 router.delete('/:id', (req, res, next) => {
+    onlyAdminVisiting(req, res, next)
     Series.findByIdAndRemove(req.params.id).then(() => res.sendStatus(200)).catch(next);
 });
 
@@ -75,7 +84,7 @@ router.get('/:id/wxpay', async (req, res, next) => {
     total_fee: series.price * 100,
     spbill_create_ip: req.ip,
     openid: req.user.username, //username is openid
-    notify_url: "http://www.rzyyx.cn/cogen/wechat/api/1.0/wechat/paynotify"
+    notify_url: "http://www.rzyyx.cn/api/1.0/wechat/paynotify"
   }
   wxPayclient.getBrandWCPayRequestParams(orderParams, (err, payargs) => {
     if(!err) {
@@ -87,6 +96,7 @@ router.get('/:id/wxpay', async (req, res, next) => {
         state: 'prepay'
       })
       order.save().then(() => {
+        payargs.out_trade_no = orderParams.out_trade_no
         res.send(payargs)
       }).catch((err) => {
         console.log(err)
@@ -96,6 +106,12 @@ router.get('/:id/wxpay', async (req, res, next) => {
       res.send(400, err)
     }
   })
+})
+
+router.get('/:id/check_paystate', (req, res, next) => {
+  Order.findOne({_id: req.query.out_trade_no}).then((order) => {
+    res.send({state: order.state})
+  }).catch(next)
 })
 
 

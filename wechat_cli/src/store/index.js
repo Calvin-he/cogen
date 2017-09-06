@@ -75,6 +75,12 @@ const actions = {
     })
   },
 
+  getPayState ({dispatch}, {seriesId, outTradeNo}) {
+    return Vue.axios.get(`/series/${seriesId}/check_paystate?out_trade_no=${outTradeNo}`).then(response => {
+      return response.data.state
+    })
+  },
+
   showMessage ({commit}, {msg, level}) {
     commit('SET_MESSAGE_EVENT', {msg, level})
     setTimeout(() => {

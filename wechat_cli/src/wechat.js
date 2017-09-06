@@ -47,16 +47,7 @@ var api = {
     })
   },
 
-  pay (payparams) {
-    /* eslint-disable-next-line
-    WeixinJSBridge.invoke(
-      'getBrandWCPayRequest', JSON.stringify(payparams), function (res) {
-        if (res.err_msg === 'get_brand_wcpay_request:ok') {
-          alert('paid successfully')
-        } else {
-          alert(res.err_msg + ': ' + JSON.stringify(payparams))
-        }
-      }) */
+  pay (payparams, successFunc, errorFunc) {
     wx.chooseWXPay({
       timestamp: payparams.timeStamp,
       nonceStr: payparams.nonceStr,
@@ -64,10 +55,13 @@ var api = {
       signType: payparams.signType,
       paySign: payparams.paySign,
       success: (res) => {
-        alert(res)
+        successFunc && successFunc(res)
       },
       fail: (err) => {
-        alert(JSON.stringify(err) + ': ' + JSON.stringify(payparams))
+        errorFunc && errorFunc(err)
+      },
+      cancel: (err) => {
+        errorFunc && errorFunc(err)
       }
     })
   }

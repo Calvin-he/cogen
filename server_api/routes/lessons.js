@@ -7,13 +7,21 @@ var Media = mongoose.model('Media');
 var User = mongoose.model("User");
 var Comment = mongoose.model("Comment");
 
+var onlyAdminVisiting = (req, res, next) => {
+    if (!req.user.isAdmin) {
+        res.sendStatus(403)
+    }
+}
+
 router.get('/', (req, res, next) => {
+    onlyAdminVisiting(req, res, next)
     Lesson.list().then(lessons => {
         res.send(lessons)
     }).catch(next);
 });
 
 router.post('/', async (req, res, next) => {
+    onlyAdminVisiting(req, res, next)
     var fields = only(req.body, 'title content mediaId mediaId2');
     if(fields.mediaId) {
         let media = await Media.findById(fields.mediaId).exec()
@@ -28,6 +36,7 @@ router.post('/', async (req, res, next) => {
 });
 
 router.put('/:id', async (req, res, next) => {
+    onlyAdminVisiting(req, res, next)
     var fields = only(req.body, 'title content mediaId mediaId2');
     fields.updated = Date.now();
     if(fields.mediaId) {
@@ -44,6 +53,7 @@ router.put('/:id', async (req, res, next) => {
 });
 
 router.delete('/:id', (req, res, next) => {
+   onlyAdminVisiting(req, res, next)
     Lesson.findByIdAndRemove(req.params.id).then(() => res.sendStatus(200)).catch(next);
 });
 

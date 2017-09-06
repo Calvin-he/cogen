@@ -6,7 +6,8 @@ var OrderSchema = new mongoose.Schema({
   seriesId: {type: mongoose.Schema.ObjectId, ref: 'Series', required: true},
   state: {type: String, required: true, enum: ['prepay', 'paying', 'success', 'failed']},
   fee: {type: Number, required: true},
-  time_start: {type: Date},
+  transaction_id: {type: String},
+  time_start: {type: Date, default: Date.now},
   time_end: {type: Date}
 });
 

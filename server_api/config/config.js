@@ -12,8 +12,8 @@ var Config = {
   secret: '59950ad26fcef1e32e2ba33a29aba58a',
   token: 'calvinheceshihao',
   encodingAESKey: '',
-  mchId: '1486203582',
-  mchApiKey: 'fga3dfi323Nf9099y2jk32j67dke21lG',
+  mchId: 'baomi',
+  mchApiKey: 'baomi',
   mchNotifyUrl: '',
   mchCertPath: '',
   baseUrl: 'http://127.0.0.1:3000'

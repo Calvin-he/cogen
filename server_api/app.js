@@ -48,6 +48,7 @@ app.use('/api/1.0/wechat', require('./routes/wechat'));
 app.use('/api/1.0/auth', require('./routes/auth'));
 
 apiApp = express();
+// apiApp.disable('etag');
 apiApp.use(authUtils.authRequest)
 apiApp.use('/lessons', require('./routes/lessons'));
 apiApp.use('/media', require('./routes/media'));

@@ -4,6 +4,18 @@
       <a slot="left" @click="$router.go(-1)">返回</a>
     </cogen-header>
     <div class="section">
+      <h4 class="title is-4">商品信息</h4>
+      <div class="columns is-mobile">
+        <div class="column is-4">名称</div>
+        <div class="column">{{series.title}}</div>
+      </div>
+      <div class="columns is-mobile">
+        <div class="column is-4">价格</div>
+        <div class="column">￥{{series.price}}</div>
+      </div>
+    </div>
+    <hr/>
+    <div class="section">
       <h4 class="title is-4">个人信息</h4>
       <div class="columns is-mobile">
         <div class="column is-4">头像</div>
@@ -21,31 +33,15 @@
         <div class="column is-4">性别</div>
         <div class="column">{{userSex}}</div>
       </div>
-      <div class="columns is-mobile">
+      <!--div class="columns is-mobile">
         <div class="column is-4">手机号码</div>
         <div class="column">{{user.phoneNo}}</div>
-      </div>
-    </div>
-    <hr>
-    <div class="section">
-      <h4 class="title is-4">商品信息</h4>
-      <div class="columns is-mobile">
-        <div class="column is-4">名称</div>
-        <div class="column">{{series.title}}</div>
-      </div>
-      <div class="columns is-mobile">
-        <div class="column is-4">价格</div>
-        <div class="column">￥{{series.price}}</div>
-      </div>
-      <div class="columns is-mobile">
-        <div class="column is-4">有效期</div>
-        <div class="column"></div>
-      </div>
+      </div -->
     </div>
     <div class="footer">
       <div class="columns is-mobile">
         <div class="column">
-          <a class=" button is-primary is-fullwidth" @click="startWxPay">付款</a>
+          <a class=" button is-primary is-fullwidth" :class="{'is-loading': paying}" @click="startWxPay">付款</a>
         </div>
       </div>
     </div>
@@ -66,7 +62,8 @@ export default {
   },
   data () {
     return {
-      user: this.$auth.user()
+      user: this.$auth.user(),
+      paying: false
     }
   },
   computed: {
@@ -97,18 +94,38 @@ export default {
   },
   methods: {
     startWxPay () {
-      this.$store.dispatch('getSeriesPayParams', {seriesId: this.seriesId}).then((payparams) => {
-        wx.pay(payparams)
+      this.paying = true
+      this.$store.dispatch('getSeriesPayParams', { seriesId: this.seriesId }).then((payparams) => {
+        wx.pay(payparams, (res) => {
+          this._checkPayStateAfterSuccess(payparams.out_trade_no)
+        }, (res) => {
+          this.paying = false
+          this.$store.dispatch('showMessage', { msg: '支付失败!', level: 'warning' })
+        })
       })
+    },
+
+    _checkPayStateAfterSuccess (outTradeNo) {
+      setTimeout(() => {
+        this.$store.dispatch('getPayState', { seriesId: this.seriesId, outTradeNo: outTradeNo }).then(state => {
+          if (state === 'prepay') {
+            this._checkPayStateAfterSuccess(outTradeNo)
+          } else if (state === 'success') {
+            this.$auth.refresh()
+            this.paying = false
+            this.$store.dispatch('showMessage', { msg: '支付成功!', level: 'info' })
+            this.$router.replace({ name: 'LessonList', params: { seriesId: this.seriesId } })
+          } else {
+            this.paying = false
+            this.$store.dispatch('showMessage', { msg: '支付失败！', level: 'warning' })
+          }
+        })
+      }, 3000)
+    },
+
+    components: {
+      CogenHeader
     }
-  },
-  components: {
-    CogenHeader
   }
 }
 </script>
-
-<style>
-
-</style>
-
