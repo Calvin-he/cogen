@@ -10,6 +10,8 @@ var config = require('./config/config');
 var fs = require('fs');
 var authUtils = require('./config/auth');
 
+mongoose.Promise = require('bluebird');
+
 var app = express();
 
 // view engine setup
@@ -72,8 +74,6 @@ app.use(function(err, req, res, next) {
   res.status(err.status || 500);
   res.send(res.locals);
 });
-
-mongoose.Promise = require('bluebird');
 
 function connectDB () {
     var options = { server: { socketOptions: { keepAlive: 1 } } };

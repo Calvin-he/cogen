@@ -65,7 +65,7 @@
       </div>
     </div>
     <p class="control">
-      <button type="button" class="button is-info" @click="openPreview" v-show="series._id">预览</button>
+      <a class="button is-info" @click="openPreview" v-show="series._id" :href="getPreviewUrl()">预览</a>
       <button type="submit" class="button is-primary" style="left: 45%" @click="submit">提交</button>
       <button type="button" class="button is-danger pull-right" @click="deleteSeries" v-if="series._id">删除</button>
     </p>
@@ -266,9 +266,11 @@ export default {
         this.ctrl_freeLessons.value[rid] = false
       }
     },
-
+    getPreviewUrl () {
+      return '/cogen/wechat/#/seriesintro/' + this.series._id
+    },
     openPreview () {
-      window.open('/cogen/wechat/#/seriesintro/' + this.series._id, 'Preview_Series_Window',
+      window.open(this.getPreviewUrl(), 'Preview_Series_Window',
           'height=736, width=414, menubar=no, toolbar=no, location=yes')
     }
   },

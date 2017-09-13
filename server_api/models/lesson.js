@@ -22,8 +22,6 @@ var LessonSchema = new mongoose.Schema({
   mediaPath: { type : String, default : '', trim : true },
   mediaId2: { type: mongoose.Schema.ObjectId, ref: 'Media'},
   mediaPath2: { type : String, default : '', trim : true },
-  commentsSize: {type: Number, default: 0},
-  comments: [CommentSchema],
   created: {type: Date, default: Date.now },
   updated: {type: Date, default: Date.now }
 });
@@ -42,8 +40,6 @@ CommentSchema.statics = {
 }
 
 
-var Lesson = mongoose.model('Lesson', LessonSchema);
+mongoose.model('Lesson', LessonSchema);
 
 mongoose.model('Comment', CommentSchema);
-
-module.exports = Lesson;

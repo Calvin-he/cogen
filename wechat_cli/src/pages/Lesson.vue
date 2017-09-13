@@ -35,12 +35,14 @@ export default {
   computed: {
     seriesUrl () {
       return '/seriesintro/' + this.seriesId
+    },
+    series () {
+      return this.$store.state.series || {}
     }
   },
 
   data () {
     return {
-      series: {},
       lesson: { mediaPath: '', mediaPath2: '' }
     }
   },
@@ -52,10 +54,13 @@ export default {
   methods: {
     loadLesson () {
       this.$store.dispatch('getLesson', { seriesId: this.seriesId, lessonId: this.lessonId }).then((lesson) => {
-        this.series = this.$store.state.series
         this.lesson = lesson
-        // console.log(this.lesson)
         wechat.wxShare({title: this.lesson.title, desc: this.series.title})
+        if (this.series.paidInfo && this.lesson._state === 'open') {
+          this.$store.dispatch('visitLesson', {seriesId: this.seriesId, lessonId: this.lessonId}).then(() => {
+            this.$set(this.lesson, '_state', 'visited')
+          })
+        }
       })
     }
   },

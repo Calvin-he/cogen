@@ -1,8 +1,6 @@
 <template>
   <div>
-    <cogen-header :url="seriesUrl" :title="series.title">
-      <a slot="left" @click="$router.go(-1)">返回</a>
-    </cogen-header>
+    <cogen-header :url="seriesUrl" :title="series.title"></cogen-header>
     <div class="section">
       <h4 class="title is-4">商品信息</h4>
       <div class="columns is-mobile">
@@ -34,14 +32,15 @@
         <div class="column">{{userSex}}</div>
       </div>
       <!--div class="columns is-mobile">
-        <div class="column is-4">手机号码</div>
-        <div class="column">{{user.phoneNo}}</div>
-      </div -->
+                  <div class="column is-4">手机号码</div>
+                  <div class="column">{{user.phoneNo}}</div>
+                </div -->
     </div>
     <div class="footer">
       <div class="columns is-mobile">
         <div class="column">
-          <a class=" button is-primary is-fullwidth" :class="{'is-loading': paying}" @click="startWxPay">付款</a>
+          <a class=" button is-primary is-fullwidth" :class="{'is-loading': paying}" @click="startWxPay" v-if="!isPaid">付款</a>
+          <a class="button is-primary is-outlined is-fullwidth" @click.stop.prevent="gotoLessonList" v-else>查看课程列表</a>
         </div>
       </div>
     </div>
@@ -70,9 +69,6 @@ export default {
     seriesUrl () {
       return '/seriesintro/' + this.seriesId
     },
-    series () {
-      return this.$store.state.series
-    },
     userSex () {
       switch (this.user.sex) {
         case 1:
@@ -82,27 +78,44 @@ export default {
         default:
           return '未知'
       }
+    },
+    isPaid () {
+      return this.series.paidInfo != null
+    },
+    series () {
+      return this.$store.state.series || {}
     }
   },
   mounted () {
     let seriesId = this.seriesId
-    this.$store.dispatch('getSeries', seriesId).then((series) => {
+    this.$store.dispatch('getSeries', { seriesId }).then((series) => {
+      // this.series = series
     }).catch((error) => {
       console.error(error)
-      this.series = { title: '课程不存在' }
+      // this.series = { title: '课程不存在' }
     })
   },
   methods: {
     startWxPay () {
       this.paying = true
-      this.$store.dispatch('getSeriesPayParams', { seriesId: this.seriesId }).then((payparams) => {
-        wx.pay(payparams, (res) => {
-          this._checkPayStateAfterSuccess(payparams.out_trade_no)
-        }, (res) => {
-          this.paying = false
-          this.$store.dispatch('showMessage', { msg: '支付失败!', level: 'warning' })
+      if (/micromessenger/.test(navigator.userAgent.toLowerCase())) {
+        this.$store.dispatch('getSeriesPayParams', { seriesId: this.seriesId }).then((payparams) => {
+          wx.pay(payparams, (res) => {
+            this._checkPayStateAfterSuccess(payparams.out_trade_no)
+          }, (res) => {
+            this.paying = false
+            this.$store.dispatch('showMessage', { msg: '支付失败!', level: 'warning' })
+          })
         })
-      })
+      } else {
+        this.axios.get(`/series/${this.seriesId}/wxpay_debug`).then((res) => {
+          console.log(res.status)
+          this.paying = false
+          this.$store.dispatch('showMessage', { msg: '支付成功!', level: 'info' })
+          this.$router.push({ name: 'LessonList', params: { seriesId: this.seriesId, fresh: true } })
+          // window.location.reload()
+        })
+      }
     },
 
     _checkPayStateAfterSuccess (outTradeNo) {
@@ -111,10 +124,10 @@ export default {
           if (state === 'prepay') {
             this._checkPayStateAfterSuccess(outTradeNo)
           } else if (state === 'success') {
-            this.$auth.refresh()
             this.paying = false
             this.$store.dispatch('showMessage', { msg: '支付成功!', level: 'info' })
-            this.$router.replace({ name: 'LessonList', params: { seriesId: this.seriesId } })
+            this.$router.push({ name: 'LessonList', params: { seriesId: this.seriesId, fresh: true } })
+            // window.location.reload()
           } else {
             this.paying = false
             this.$store.dispatch('showMessage', { msg: '支付失败！', level: 'warning' })
@@ -122,10 +135,12 @@ export default {
         })
       }, 3000)
     },
-
-    components: {
-      CogenHeader
+    gotoLessonList () {
+      this.$router.replace({ name: 'LessonList', params: { seriesId: this.seriesId } })
     }
+  },
+  components: {
+    CogenHeader
   }
 }
 </script>

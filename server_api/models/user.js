@@ -12,6 +12,12 @@ var only = require( 'only' );
 /**
  * User Schema
  */
+const PaidSeriesSchema = new mongoose.Schema( {
+  seriesId: { type: mongoose.Schema.ObjectId, ref: 'Series', required: true },
+  paidDate: { type: Date, default: Date.now },
+  lessonIdOfLastVisited: { type: mongoose.Schema.ObjectId, ref: 'Lesson', required: true },
+  dateOfLastVisited: { type: Date },
+}, { _id: false } )
 
 const UserSchema = new mongoose.Schema( {
   salt: { type: String },
@@ -19,14 +25,14 @@ const UserSchema = new mongoose.Schema( {
   city: { type: String },
   phoneNo: { type: String },
   email: { type: String },
-  sex: {type: Number, default: 0}, // 用户的性别，值为1时是男性，值为2时是女性，值为0时是未知 
+  sex: { type: Number, default: 0 }, // 用户的性别，值为1时是男性，值为2时是女性，值为0时是未知 
   username: { type: String, unique: true, required: true },
-  wx_openid: { type: String},
+  wx_openid: { type: String },
   nickname: { type: String },
   hashed_password: { type: String },
   isAdmin: { type: Boolean, default: false },
   created: { type: Date, default: Date.now },
-  paidSeries: mongoose.Schema.Types.Mixed, // {seriesId: lessonIdOfLastRead}
+  paidSeries: { type: [ PaidSeriesSchema ], default: [] },
   votedComments: mongoose.Schema.Types.Mixed
 } );
 
@@ -144,54 +150,58 @@ UserSchema.statics = {
       if ( !credentials.code ) {
         return Promise.reject( 'Invalid credentials' )
       }
-      
+
 
       return wxAuthClient.getAccessToken( credentials.code ).then( ( result ) => {
         let openid = result.data.openid
         return this.find( { wx_openid: openid } ).then( users => {
-          if(users.length === 0) {
-            return wxAuthClient.getUser(openid).then((userinfo)=>{
-              return new User({
+          if ( users.length === 0 ) {
+            return wxAuthClient.getUser( openid ).then( ( userinfo ) => {
+              return new User( {
                 username: userinfo.openid,
                 wx_openid: userinfo.openid,
                 nickname: userinfo.nickname,
                 sex: userinfo.sex,
-                city: userinfo.country + "|" + userinfo.province + "| "+ userinfo.city,
-                avatar: userinfo.headimgurl   
-              }).save().then(doc => {
-                  return only(doc, returnedFields);
-              })
-            })
-          }else {
-            return only( users[0], returnedFields);
+                city: userinfo.country + "|" + userinfo.province + "| " + userinfo.city,
+                avatar: userinfo.headimgurl
+              } ).save().then( doc => {
+                return only( doc, returnedFields );
+              } )
+            } )
+          } else {
+            return only( users[ 0 ], returnedFields );
           }
         } );
-      } ).catch(err => {
-        console.log(err);
+      } ).catch( err => {
+        console.log( err );
         return Promise.reject( 'Invalid credentials' )
-      })
+      } )
     }
   },
 
-  /**
-   * Load
-   *
-   * @param {Object} options
-   * @param {Function} cb
-   * @api private
-   */
-
-  load: function( options, cb ) {
-    options.select = options.select || 'nickname username';
-    return this.findOne( options.criteria )
-      .select( options.select )
-      .exec( cb );
+  findByUsername: function( username ) {
+    return User.findOne( { username: username } )
   },
 
-  addPaidSeries: function(username, seriesId) {
-    let updated = {}
-    updated['paidSeries.' + seriesId] = null
-    return User.update({username: username}, {$set: updated})
+  addPaidSeries: function( username, seriesId ) {
+    let updated = {
+      paidSeries: {
+        seriesId: seriesId,
+        paidDate: Date.now()
+      }
+    }
+    return User.update( { username: username }, { $push: updated } )
+  },
+
+  markVisitedLesson: async ( username, seriesId, lessonId ) => {
+    let user = await User.findOne( { username: username } )
+    let idx = user.paidSeries.findIndex(ps => ps.seriesId.toString() === seriesId.toString())
+    if(idx !== -1){
+      let updated = {}
+      updated[`paidSeries.${idx}.lessonIdOfLastVisited`] = lessonId
+      updated[`paidSeries.${idx}.dateOfLastVisited`] = Date.now()
+      await User.update({username: username}, {$set: updated})
+    }
   },
 
   votesComment: function( username, lessonId, commentId ) {

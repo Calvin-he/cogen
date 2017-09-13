@@ -33,7 +33,7 @@ router.get('/refresh', authUtils.authRequest, (req, res, next) => {
 
 router.get( '/user', authUtils.authRequest, function( req, res, next ) {
   User.findOne({username: req.user.username}).then(doc => {
-    let user = only(doc, 'username nickname avatar city phoneNo email isAdmin paidSeries')
+    let user = only(doc, 'username nickname avatar sex city phoneNo email isAdmin paidSeries')
     res.send({ data: user })
   }).catch( (err) => {
     res.status(404).send(err)

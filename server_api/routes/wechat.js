@@ -40,7 +40,7 @@ router.post('/paynotify', wxclient.payClient.useWXCallback(function(msg, req, re
   }
   Order.findById(msg.out_trade_no).then(order => {
     if(order.state === 'prepay') {
-      Order.findByIdAndUpdate(msg.out_trade_no, { 
+      Order.findByIdAndUpdate(msg.out_trade_no, {
         state: 'success',
         transaction_id: msg.transaction_id,
         time_end: Date.now()
