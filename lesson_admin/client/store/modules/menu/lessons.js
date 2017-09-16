@@ -26,6 +26,15 @@ export default {
         link: 'lessons/Series.vue'
       },
       component: lazyLoading('lessons/Series')
+    }, {
+      name: '单词管理',
+      path: '/lessons/words',
+      meta: {
+        auth: true,
+        label: '单词管理',
+        link: 'lessons/Words.vue'
+      },
+      component: lazyLoading('lessons/Words')
     }
   ]
 }
