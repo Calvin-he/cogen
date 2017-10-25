@@ -31,7 +31,7 @@
             </thead>
             <tbody>
               <template v-for="(lesson, index) in lessonList">
-                <tr>
+                <tr :key="lesson._id">
                   <td>{{index+1}}</td>
                   <td>{{lesson.title}}</td>
                   <td>
@@ -43,7 +43,7 @@
                       v-show="lesson._id===playingLessonId" title="停止">
                       <span class="icon is-small"><i class="fa fa-stop"></i></span>
                     </a>
-                    <span class="media-name">{{mediaFileName(lesson.mediaPath)}}
+                    <span class="media-name">{{lesson.mediaPath|media-title}}
                     </span>
   
                   </td>
@@ -59,7 +59,7 @@
                     </a>
                   </td>
                 </tr>
-                <tr v-if="expanded[lesson._id]">
+                <tr v-if="expanded[lesson._id]" :key="lesson._id">
                   <td colspan="5">
                     <lesson-editor :lesson="lesson"></lesson-editor>
                   </td>
@@ -112,7 +112,7 @@ export default {
     mediaFileName (mediaPath) {
       if (mediaPath) {
         let name = mediaPath.substr(mediaPath.lastIndexOf('/') + 1)
-        return name.substr(name.indexOf('-') + 1)
+        return name
       } else {
         return null
       }

@@ -3,7 +3,7 @@
 var Config = {
   db: 'mongodb://localhost/ce',
   port: 3000,
-  uploadDir: 'uploads',
+  mediaDir: 'C:/Users/hexian/gitproject/cogen/server_api/uploads',
   username: 'admin',
   password: '111111',
   jwtsecret: '59950ad26fcef1e32e2ba33a29aba58a',

@@ -12,4 +12,5 @@ classes/
 uploads/
 dist/
 server_api/public/admin/
+server_api/config/config.js
 **/*.log

@@ -26,7 +26,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
  // CookieParser should be above sessio
 app.use(cookieParser());
 app.use("/cogen", express.static(path.join(__dirname, 'public')));
-app.use(express.static(config.uploadDir));
+app.use("/media", express.static(config.mediaDir));
 
 fs.readdirSync('./models')
   .filter(file => ~file.search(/^[^\.].*\.js$/))
@@ -55,6 +55,7 @@ apiApp.use(authUtils.authRequest)
 apiApp.use('/lessons', require('./routes/lessons'));
 apiApp.use('/media', require('./routes/media'));
 apiApp.use('/series', require('./routes/series'));
+apiApp.use('/words', require('./routes/words'));
 app.use('/api/1.0', apiApp);
 
 // catch 404 and forward to error handler

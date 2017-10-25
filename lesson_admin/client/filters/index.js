@@ -6,6 +6,12 @@ function date (value) {
   }
 }
 
+function mediaTitle (path) {
+  let idx = path.lastIndexOf('/')
+  return path.substring(idx + 1)
+}
+
 export {
-  date
+  date,
+  mediaTitle
 }

@@ -1,24 +1,24 @@
 'use strict';
 
-var express = require('express');
-var router = express.Router();
-var multer = require('multer');
-var config = require('./config');
-var fs = require('fs');
+const express = require('express'),
+    router = express.Router(),
+    multer = require('multer'),
+    fs = require('fs'),
+    path = require('path'),
+    config = require('./config');
 
 var storage = multer.diskStorage({
     destination: function (req, file, cb) {
-        var uploadDir = config.uploadDir + '/uploads';
+        var uploadDir = path.resolve(config.mediaDir, 'uploads');
         if(!fs.existsSync(uploadDir)) {
             fs.mkdirSync(uploadDir);
         }
         var date = new Date();
-        var day = date.getFullYear() + "-" + date.getMonth() + "-" + date.getDate();
-        var path = uploadDir + "/" + day;
-        if(!fs.existsSync(path)){
-            fs.mkdirSync(path);
+        uploadDir = path.join(uploadDir, date.getFullYear() + "-" + date.getMonth() + "-" + date.getDate());
+        if(!fs.existsSync(uploadDir)){
+            fs.mkdirSync(uploadDir);
         }
-        cb(null, path)
+        cb(null, uploadDir)
     },
     filename: function (req, file, cb) {
         var date = new Date();
@@ -33,7 +33,8 @@ var upload = multer({
 })
 
 upload.relativePath = function(file) {
-    var filepath = file.path.replace(config.uploadDir, '');
+    let prefixPath = path.resolve(config.mediaDir)
+    let filepath = file.path.replace(prefixPath, '/media');
     return filepath.replace(/\\/g, '/')
 }
 

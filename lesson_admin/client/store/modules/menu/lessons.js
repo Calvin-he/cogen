@@ -27,14 +27,23 @@ export default {
       },
       component: lazyLoading('lessons/Series')
     }, {
+      name: '媒体文件管理',
+      path: '/lessons/media',
+      meta: {
+        auth: true,
+        label: '媒体文件管理',
+        link: 'lessons/Media.vue'
+      },
+      component: lazyLoading('lessons/Media')
+    }, {
       name: '单词管理',
       path: '/lessons/words',
       meta: {
         auth: true,
         label: '单词管理',
-        link: 'lessons/Words.vue'
+        link: 'words/WordList.vue'
       },
-      component: lazyLoading('lessons/Words')
+      component: lazyLoading('words/WordList')
     }
   ]
 }
