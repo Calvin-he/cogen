@@ -23,7 +23,7 @@ router.get( '/', ( req, res, next ) => {
 router.post( '/', ( req, res, next ) => {
   onlyAdminVisiting( req, res, next )
   var series = new Series( only( req.body, 'title desc price noticeForPurchase bannerId lessonList freeLessons' ) );
-  Media.findById( fields.bannerId ).then( media => {
+  Media.findById( series.bannerId ).then( media => {
     series.bannerPath = media.path
     series.save().then( ( doc ) => res.send( doc ) )
   } ).catch( next );

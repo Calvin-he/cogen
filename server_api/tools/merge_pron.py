@@ -1,6 +1,7 @@
 """ merge pronounciations from multiple words
 """
 import os
+import sys
 import random
 import datetime
 from pymongo import MongoClient
@@ -14,13 +15,15 @@ DB = MongoClient('localhost', 27017)['ce']
 progress_seq = 0
 
 def read_progress():
+    global progress_seq
     filepath = os.path.join(MEDIA_DIR, COCA_DIRNAME, '.progress_seq')
     if os.path.exists(filepath):
         with open(filepath, 'r') as progressf:
             progress_seq = int(progressf.read())
 
 def write_progress():
-    filepath = os.path.join(MODULE_DIR, '.progress_seq')
+    global progress_seq
+    filepath = os.path.join(MEDIA_DIR, COCA_DIRNAME, '.progress_seq')
     with open(filepath, 'w') as progressf:
         progressf.write(str(progress_seq))
 
@@ -43,9 +46,12 @@ def merge_wordlist(words, export_filename):
     for wp in cursor:
         if not wp['_forvoResults']:
             raise Exception('No pronouciations for Word ' + wp['word'])
-        if wp['pronouns']:
-            rand_idx = random.randint(0, len(wp['pronouns'])-1)
-            pronuns.append(wp['pronouns'][rand_idx])
+
+        wp_pronuns = wp['pronouns']
+        if wp_pronuns:
+            pronuns.append(wp_pronuns[0])
+            pronuns.append(wp_pronuns[1 % len(wp_pronuns)])
+            pronuns.append(wp_pronuns[2 % len(wp_pronuns)])
     if not pronuns:
         return
 
@@ -59,7 +65,7 @@ def merge_wordlist(words, export_filename):
     export_path = os.path.join(MEDIA_DIR, COCA_DIRNAME, export_filename)
     audios.export(export_path, format='mp3')
 
-    now = datetime.datetime.now()
+    now = datetime.datetime.utcnow()
     DB.media.insert_one({
         'path': os.path.join('/media', COCA_DIRNAME, export_filename),
         'created': now,
@@ -68,7 +74,7 @@ def merge_wordlist(words, export_filename):
     })
     write_progress()
 
-def main():
+def run():
     """ main function
     """
     global progress_seq
@@ -77,7 +83,7 @@ def main():
     for i in xrange(progress_seq, len(word_list), 10):
         end = (i+10) if (i+10) < len(word_list) else len(word_list)
         cur_wordlist = word_list[i:end]
-        export_filename = 'COCAIII_%d-%d.mp3' % (i+1, end-1)
+        export_filename = 'COCAIII_%04d-%04d.mp3' % (i+1, end)
         print 'proccessing to merge %s' % export_filename
         progress_seq += end - i
         merge_wordlist(cur_wordlist, export_filename)
@@ -91,6 +97,12 @@ def clean():
             DB.media.delete_one({'_id': media['_id']})
         else:
             print media['path']
+    cocadir = os.path.join(MEDIA_DIR, COCA_DIRNAME)
+    for filename in os.listdir(cocadir):
+        os.remove(os.path.join(cocadir, filename))
 
 if __name__ == '__main__':
-    main()
+    if sys.argv[1] == 'run':
+        run()
+    if sys.argv[1] == 'clean':
+        clean()

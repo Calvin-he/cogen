@@ -8,10 +8,12 @@
     <p class="control">
       <select-media v-model="ctrl_mediaId.value"  placeholder="选择开头录音材料" extensions="mp3" accept="audio/mpeg"></select-media>
       <span class="help is-danger" v-show="ctrl_mediaId.errors.required">必须选择录音材料</span>
+      <audio :src="ctrl_media" controls></audio>
     </p>
 
     <p class="control">
       <select-media v-model="ctrl_mediaId2.value"  placeholder="选择结尾录音材料(选填)" extensions="mp3" accept="audio/mpeg"></select-media>
+       <audio :src="ctrl_media2" controls></audio>
     </p>
   
     <p class="control">
@@ -57,7 +59,20 @@ export default {
     seriesList () {
       this.$store.dispatch('listSeries')
       return this.$store.state.lesson.seriesList
+    },
+    ctrl_media () {
+      if (this.ctrl_mediaId.value) {
+        let media = this.$store.state.lesson.mediaList.find(m => m._id === this.ctrl_mediaId.value)
+        return media.path
+      }
+    },
+    ctrl_media2 () {
+      if (this.ctrl_mediaId2.value) {
+        let media = this.$store.state.lesson.mediaList.find(m => m._id === this.ctrl_mediaId2.value)
+        return media.path
+      }
     }
+
   },
   mounted () {
     this.reset()
